@@ -16,8 +16,8 @@ public class Window {
 		searchPanel.setBounds(10, 10, 200, 210);
 
 
-		JPanel simpleSearch = createSimpleSearchPanel();
-		JPanel advancedSearch = createAdvancedSearchPanel();
+		JPanel simpleSearch = new SimpleSearchPanel();
+		JPanel advancedSearch = new AdvancedSearchPanel();
 
 		searchPanel.addTab("Simple", simpleSearch);
 		searchPanel.addTab("Advanced", advancedSearch);
@@ -43,54 +43,5 @@ public class Window {
 
 		window.setVisible(true);
 		window.setResizable(false);
-	}
-
-	public static JPanel createSimpleSearchPanel() {
-		JPanel panel = new JPanel();
-
-		JLabel l = new JLabel("Enter Search Term");
-		panel.add(l);
-
-		JTextField searchBox = new JTextField(15);
-		panel.add(searchBox);
-
-		JButton b = new JButton("Search");
-		panel.add(b);
-
-		return panel;
-	}
-
-	public static JPanel createAdvancedSearchPanel() {
-		JPanel panel = new JPanel();
-
-		JLabel l = new JLabel("Enter Search Term");
-		panel.add(l);
-
-		JTextField searchBox = new JTextField(15);
-		panel.add(searchBox);
-
-		JLabel typeLabel = new JLabel("Type");
-		panel.add(typeLabel);
-		
-		String[] targetType = { "All", "Titles", "Dialogue", "Stage Directions" };
-		JComboBox<String> typeBox = new JComboBox<>(targetType);
-		panel.add(typeBox);
-
-		JLabel playLabel = new JLabel("Play");
-		panel.add(playLabel);
-
-		JTextField playBox = new JTextField(15);
-		panel.add(playBox);
-
-		JLabel characterLabel = new JLabel("Character");
-		panel.add(characterLabel);
-
-		JTextField characterBox = new JTextField(15);
-		panel.add(characterBox);
-
-		JButton b = new JButton("Search");
-		panel.add(b);
-
-		return panel;
 	}
 }
