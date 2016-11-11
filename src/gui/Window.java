@@ -42,6 +42,7 @@ public class Window {
 		window.add(documentScrollPane);
 
 		window.setVisible(true);
+		window.setResizable(false);
 	}
 
 	public static JPanel createSimpleSearchPanel() {
