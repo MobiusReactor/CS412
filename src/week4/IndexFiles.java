@@ -53,9 +53,9 @@ public class IndexFiles {
 		String usage = "java org.apache.lucene.demo.IndexFiles"
 				+ " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
 				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
-				+ "in INDEX_PATH that can be searched with SearchFiles";
+				+ "in INDEX_PATH that can be searched with SimpleSearch";
 		String indexPath = "index";
-		String docsPath = null;
+		String docsPath = "data";
 		boolean create = true;
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {
