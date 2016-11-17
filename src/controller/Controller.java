@@ -5,6 +5,11 @@ import view.Window;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
  * Created by rokas on 16.11.17.
@@ -25,6 +30,7 @@ public class Controller implements ActionListener {
     }
 
     public void initializeView() {
+    	gui.setHistory(model.readHistory());
         gui.createAndShowGUI();
     }
 
@@ -33,6 +39,7 @@ public class Controller implements ActionListener {
         switch (e.getActionCommand()) {
             case "Search":
                 try {
+                	model.updateHistory(gui.getSimpleSearchBox());
                     model.search(gui.getSimpleSearchBox());
                 } catch (Exception e1) {
                     e1.printStackTrace();

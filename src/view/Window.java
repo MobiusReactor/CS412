@@ -4,13 +4,18 @@ import controller.Controller;
 import model.Model;
 
 import javax.swing.*;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import java.awt.event.ActionListener;
 
 public class Window {
 	private String[] results = { "first result", "second result", "third result" };
 
+	private JPanel simpleSearch = new JPanel();
 	private ActionListener listener;
-	private JTextField simpleSearchBox;
+	private JComboBox simpleSearchBox;
+	String[] history = new String[100];
 
 	public Window (ActionListener l){
 		listener = l;
@@ -27,16 +32,24 @@ public class Window {
 		searchPanel.setBounds(10, 10, 200, 210);
 
 
-		JPanel simpleSearch = new JPanel();
-		JLabel l = new JLabel("Enter Search Term");
-		simpleSearch.add(l);
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
 
-		simpleSearchBox = new JTextField(15);
-		simpleSearch.add(simpleSearchBox);
+        		JLabel l = new JLabel("Enter Search Term");
+        		simpleSearch.add(l);
+        		
+        		simpleSearchBox = new JComboBox<String>(history);
+                simpleSearchBox.setEditable(true);
+        		simpleSearchBox.setSelectedItem(null);
+                AutoCompleteDecorator.decorate(simpleSearchBox);
+        		simpleSearch.add(simpleSearchBox);
+        		
+        		JButton b = new JButton("Search");
+        		b.addActionListener(listener);
+        		simpleSearch.add(b);
+            }
 
-		JButton b = new JButton("Search");
-		b.addActionListener(listener);
-		simpleSearch.add(b);
+        });
 
 
 		JPanel advancedSearch = new AdvancedSearchPanel(listener);
@@ -68,6 +81,11 @@ public class Window {
 	}
 
 	public String getSimpleSearchBox() {
-		return simpleSearchBox.getText();
+		return (String) simpleSearchBox.getEditor().getItem();
 	}
+	
+	public void setHistory(String[] hist){
+		history = hist;
+	}
+	
 }
