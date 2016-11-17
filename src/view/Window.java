@@ -1,11 +1,22 @@
-package gui;
+package view;
+
+import controller.Controller;
+import model.Model;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 public class Window {
-	private static String[] results = { "first result", "second result", "third result" };
+	private String[] results = { "first result", "second result", "third result" };
 
-	public static void main(String[] args) {
+	private ActionListener listener;
+	private JTextField simpleSearchBox;
+
+	public Window (ActionListener l){
+		listener = l;
+	}
+
+	public void createAndShowGUI() {
 		JFrame window = new JFrame("Shakespeare Search System");
 		window.setBounds(200, 200, 800, 600);
 
@@ -16,8 +27,19 @@ public class Window {
 		searchPanel.setBounds(10, 10, 200, 210);
 
 
-		JPanel simpleSearch = new SimpleSearchPanel();
-		JPanel advancedSearch = new AdvancedSearchPanel();
+		JPanel simpleSearch = new JPanel();
+		JLabel l = new JLabel("Enter Search Term");
+		simpleSearch.add(l);
+
+		simpleSearchBox = new JTextField(15);
+		simpleSearch.add(simpleSearchBox);
+
+		JButton b = new JButton("Search");
+		b.addActionListener(listener);
+		simpleSearch.add(b);
+
+
+		JPanel advancedSearch = new AdvancedSearchPanel(listener);
 
 		searchPanel.addTab("Simple", simpleSearch);
 		searchPanel.addTab("Advanced", advancedSearch);
@@ -43,5 +65,9 @@ public class Window {
 
 		window.setVisible(true);
 		window.setResizable(false);
+	}
+
+	public String getSimpleSearchBox() {
+		return simpleSearchBox.getText();
 	}
 }

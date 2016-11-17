@@ -1,12 +1,8 @@
-package gui;
+package view;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class AdvancedSearchPanel extends JPanel implements ActionListener {
 	private JComboBox<String> typeBox;
@@ -14,7 +10,7 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 	private JTextField searchBox, playBox, characterBox;
 	private JButton searchButton;
 
-	public AdvancedSearchPanel() {
+	public AdvancedSearchPanel(ActionListener listener) {
 		JLabel searchLabel = new JLabel("Enter Search Term");
 		add(searchLabel);
 
