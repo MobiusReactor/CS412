@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.Observable;
 
 public class Model extends Observable {
@@ -38,22 +38,23 @@ public class Model extends Observable {
     }
     
     public String[] readHistory() {
-    	String[] history = new String[5];
+    	ArrayList<String> historyList = new ArrayList<String>();
     	try{
     		FileReader fr = new FileReader("History.txt");
     		BufferedReader br = new BufferedReader(fr);
     		String line = null;
-    		int i = 0;
     		while((line = br.readLine()) != null){
     			if(line.length() > 2){
-    				history[i] = line;
-    				i++;
+    				historyList.add(line);
     			}
     		}
     	} catch(IOException e){
     		e.printStackTrace();
     	}
-    	
+    	String[] history = new String[historyList.size()];
+    	for(int i = 0; i < historyList.size(); i++){
+    		history[i] = historyList.get(i);
+    	}
     	return history;
     }
 

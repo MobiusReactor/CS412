@@ -12,6 +12,6 @@
 			<attribute name="javadoc_location" value="http://lucene.apache.org/core/6_2_1/queryparser/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/James/Documents/James/University/JARs/swingx-core-1.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/swingx-core-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
