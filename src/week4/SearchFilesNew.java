@@ -1,3 +1,4 @@
+
 /*
 * Licensed to the Apache Software Foundation (ASF) under one or more
 * contributor license agreements.  See the NOTICE file distributed with
@@ -15,6 +16,9 @@
 * limitations under the License.
 */
 package week4;
+
+
+>>>>>>> 1ae394c9f810790d71a27d0487b82ade11fad98b
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
