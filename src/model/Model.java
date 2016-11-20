@@ -37,25 +37,21 @@ public class Model extends Observable {
 		}
     }
     
-    public String[] readHistory() {
+    public ArrayList<String> readHistory() {
     	ArrayList<String> historyList = new ArrayList<String>();
     	try{
     		FileReader fr = new FileReader("History.txt");
     		BufferedReader br = new BufferedReader(fr);
     		String line = null;
     		while((line = br.readLine()) != null){
-    			if(line.length() > 2){
+    			if(line.length() > 2 && !historyList.contains(line)){
     				historyList.add(line);
     			}
     		}
     	} catch(IOException e){
     		e.printStackTrace();
     	}
-    	String[] history = new String[historyList.size()];
-    	for(int i = 0; i < historyList.size(); i++){
-    		history[i] = historyList.get(i);
-    	}
-    	return history;
+    	return historyList;
     }
 
 }

@@ -4,18 +4,28 @@ import controller.Controller;
 import model.Model;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
+import com.sun.imageio.plugins.common.InputStreamAdapter;
+
+import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 public class Window {
 	private String[] results = { "first result", "second result", "third result" };
 
 	private JPanel simpleSearch = new JPanel();
+	private JTextComponent searchField;
 	private ActionListener listener;
-	private JComboBox simpleSearchBox;
-	String[] history = new String[100];
+	private ArrayList<String> history = new ArrayList<String>();
 
 	public Window (ActionListener l){
 		listener = l;
@@ -23,6 +33,10 @@ public class Window {
 
 	public void createAndShowGUI() {
 		JFrame window = new JFrame("Shakespeare Search System");
+		
+		ImageIcon image = new ImageIcon("Shakespeare.jpg");
+		window.setIconImage(image.getImage());
+		
 		window.setBounds(200, 200, 800, 600);
 
 		window.setLayout(null);
@@ -38,17 +52,15 @@ public class Window {
         		JLabel l = new JLabel("Enter Search Term");
         		simpleSearch.add(l);
         		
-        		simpleSearchBox = new JComboBox<String>(history);
-                simpleSearchBox.setEditable(true);
-        		simpleSearchBox.setSelectedItem(null);
-                AutoCompleteDecorator.decorate(simpleSearchBox);
-        		simpleSearch.add(simpleSearchBox);
+        		searchField = new JTextField(10);
+        		searchField.setEditable(true);
+        		simpleSearch.add(searchField);
+        		AutoCompleteDecorator.decorate(searchField, history, false);
         		
         		JButton b = new JButton("Search");
         		b.addActionListener(listener);
         		simpleSearch.add(b);
             }
-
         });
 
 
@@ -80,12 +92,12 @@ public class Window {
 		window.setResizable(false);
 	}
 
-	public String getSimpleSearchBox() {
-		return (String) simpleSearchBox.getEditor().getItem();
+	public String getSimpleSearch() {
+		return searchField.getText();
 	}
 	
-	public void setHistory(String[] hist){
-		history = hist;
+	public void setHistory(ArrayList<String> hist){
+		history = hist; 
 	}
 	
 }

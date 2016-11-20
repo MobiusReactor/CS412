@@ -39,8 +39,9 @@ public class Controller implements ActionListener {
         switch (e.getActionCommand()) {
             case "Search":
                 try {
-                	model.updateHistory(gui.getSimpleSearchBox());
-                    model.search(gui.getSimpleSearchBox());
+                	System.out.println(gui.getSimpleSearch());
+                	model.updateHistory(gui.getSimpleSearch());
+                    model.search(gui.getSimpleSearch());
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

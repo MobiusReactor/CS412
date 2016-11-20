@@ -5,3 +5,7 @@ Juliet
 Iago
 Henry V
 Desdemona
+Hamlet
+Othello
+
+
