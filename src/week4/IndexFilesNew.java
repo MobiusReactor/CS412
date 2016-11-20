@@ -1,3 +1,4 @@
+package week4;
 
 
 /*
@@ -147,8 +148,8 @@ public class IndexFilesNew {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					try {
-						//indexDoc(writer, file, attrs.lastModifiedTime().toMillis());
-						indexDocScenes(writer, file, attrs.lastModifiedTime().toMillis());
+						indexDoc(writer, file, attrs.lastModifiedTime().toMillis());
+						//indexDocScenes(writer, file, attrs.lastModifiedTime().toMillis());
 
 					} catch (IOException ignore) {
 						// don't index files that can't be read.
@@ -157,14 +158,14 @@ public class IndexFilesNew {
 				}
 			});
 		} else {
-			//indexDoc(writer, path, Files.getLastModifiedTime(path).toMillis());
-			indexDocScenes(writer, path, Files.getLastModifiedTime(path).toMillis());
+			indexDoc(writer, path, Files.getLastModifiedTime(path).toMillis());
+			//indexDocScenes(writer, path, Files.getLastModifiedTime(path).toMillis());
 
 		}
 	}
 
 	/** Indexes a single document */
-	static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
+	static void indexDocOriginal(IndexWriter writer, Path file, long lastModified) throws IOException {
 		try (InputStream stream = Files.newInputStream(file)) {
 			// make a new, empty document
 			Document doc = new Document();
@@ -262,7 +263,7 @@ public class IndexFilesNew {
 	}
 	
 	
-	static void indexDocScenes(IndexWriter writer, Path file, long lastModified) throws IOException {
+	static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
 		try (InputStream stream = Files.newInputStream(file)) {
 			
 			String xml = readFile(file.toString(), StandardCharsets.UTF_8);
@@ -283,8 +284,17 @@ public class IndexFilesNew {
 					
 				String actTitle = act.select("title").get(0).text();
 				
-				for (org.jsoup.nodes.Element e : act.select("scene")) {	
-					//persona += " ; " + e.text();
+				for (org.jsoup.nodes.Element sceneElement : act.select("scene")) {	
+					
+					
+					String scene = sceneElement.select("title").get(0).text();
+					
+					String stagedir = sceneElement.select("stagedir").get(0).text();
+
+					
+					
+					for (org.jsoup.nodes.Element speech : sceneElement.select("speech")) {	
+
 					Document doc = new Document();
 					
 					Field pathField = new StringField("path", file.toString(), Field.Store.YES);
@@ -292,15 +302,20 @@ public class IndexFilesNew {
 					
 					doc.add(new LongPoint("modified", lastModified));
 
-					doc.add(new TextField("contents", e.text(), Field.Store.NO));
+					doc.add(new TextField("contents", speech.text(), Field.Store.NO));
 					
-					String title = e.select("title").get(0).text();
+					String speaker = speech.select("speaker").get(0).text();
+					
+					doc.add(new StringField("speaker", speaker, Field.Store.YES));
 					
 					doc.add(new StringField("title", playTitle,Field.Store.YES));
 					
 					doc.add(new StringField("act", actTitle,Field.Store.YES));
 					
-					doc.add(new StringField("scene", title,Field.Store.YES));
+					doc.add(new StringField("scene", scene,Field.Store.YES));
+					
+					doc.add(new StringField("stagedir", stagedir,Field.Store.YES));
+
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
 						// New index, so we just add the document (no old document can be there):
@@ -314,7 +329,7 @@ public class IndexFilesNew {
 						writer.updateDocument(new Term("path", file.toString()), doc);
 					}
 					
-				}
+				}}
 				}
 				
 			}
