@@ -11,12 +11,19 @@ import java.util.Observable;
 
 public class Model extends Observable {
     private SimpleSearch searcher;
+    private AdvancedSearch advancedSearcher;
+    
     public Model() {
         searcher = new SimpleSearch();
+        advancedSearcher = new AdvancedSearch();
     }
 
     public void search(String query) throws Exception {
         System.out.println(searcher.search(query));
+    }
+    
+    public void advancedSearch(String term, String play, String field, String speaker) throws Exception{
+    	//System.out.println(advancedSearcher.search(term,play,field,speaker));
     }
     
     public void updateHistory(String newTerm){

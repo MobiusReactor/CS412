@@ -17,8 +17,6 @@
 */
 package week4;
 
-
->>>>>>> 1ae394c9f810790d71a27d0487b82ade11fad98b
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -195,6 +193,12 @@ public class SearchFilesNew {
             	String scene = doc.get("scene");
             	if (scene != null){
             		System.out.println("   Scene: " + scene);
+            		
+            		String speaker = doc.get("speaker");
+            		
+            		if (speaker != null){
+                		System.out.println("   Speaker: " + speaker);
+            		}
             	}
             }
           }

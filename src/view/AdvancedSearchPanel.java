@@ -1,6 +1,9 @@
 package view;
 
 import javax.swing.*;
+
+import model.AdvancedSearch;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -60,7 +63,14 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 				System.out.println("Searching for \"" + searchBox.getText() + "\" in " + typeBox.getSelectedItem() + " fields of the play \"" + playBox.getText() + "\"");
 			}
 			
-			// Call actual search method here
+			AdvancedSearch engine = new AdvancedSearch();
+			try {
+				engine.search(searchBox.getText(), playBox.getText(), typeBox.getSelectedItem().toString(), characterBox.getText());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		}
 	}
 }

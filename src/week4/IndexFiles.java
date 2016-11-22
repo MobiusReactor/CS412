@@ -54,7 +54,7 @@ public class IndexFiles {
 				+ " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
 				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
 				+ "in INDEX_PATH that can be searched with SimpleSearch";
-		String indexPath = "index";
+		String indexPath = "index_simple";
 		String docsPath = "data";
 		boolean create = true;
 		for (int i = 0; i < args.length; i++) {
@@ -175,6 +175,7 @@ public class IndexFiles {
 			// For example the long value 2011021714 would mean
 			// February 17, 2011, 2-3 PM.
 			doc.add(new LongPoint("modified", lastModified));
+			
 
 			// Add the contents of the file to a field named "contents". Specify a Reader,
 			// so that the text of the file is tokenized and indexed, but not stored.

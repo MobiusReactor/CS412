@@ -305,15 +305,15 @@ public class IndexFilesNew {
 					
 					String speaker = speech.select("speaker").get(0).text();
 					
-					doc.add(new StringField("speaker", speaker, Field.Store.YES));
+					doc.add(new TextField("speaker", speaker, Field.Store.YES));
 					
-					doc.add(new StringField("title", playTitle,Field.Store.YES));
+					doc.add(new TextField("title", playTitle,Field.Store.YES));
 					
 					doc.add(new StringField("act", actTitle,Field.Store.YES));
 					
-					doc.add(new StringField("scene", scene,Field.Store.YES));
+					doc.add(new TextField("scene", scene,Field.Store.YES));
 					
-					doc.add(new StringField("stagedir", stagedir,Field.Store.YES));
+					doc.add(new TextField("stagedir", stagedir,Field.Store.YES));
 
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
