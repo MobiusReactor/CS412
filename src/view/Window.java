@@ -18,21 +18,25 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class Window {
-	private String[] results = { "first result", "second result", "third result" };
+	private String[] results = {""};
 
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
 	private ActionListener listener;
 	private ArrayList<String> history = new ArrayList<String>();
+	private JList<String> searchResults;
+	private JFrame window;
 
 	public Window (ActionListener l){
 		listener = l;
 	}
 
 	public void createAndShowGUI() {
-		JFrame window = new JFrame("Shakespeare Search System");
+		window = new JFrame("Shakespeare Search System");
 		
 		ImageIcon image = new ImageIcon("Shakespeare.jpg");
 		window.setIconImage(image.getImage());
@@ -71,7 +75,7 @@ public class Window {
 
 		window.add(searchPanel);
 
-		JList<String> searchResults = new JList<String>(results);
+		searchResults = new JList<String>(results);
 		searchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		searchResults.setLayoutOrientation(JList.VERTICAL);
 
@@ -98,6 +102,11 @@ public class Window {
 	
 	public void setHistory(ArrayList<String> hist){
 		history = hist; 
+	}
+
+	public void updateResults(List<String> newResults){
+		searchResults.setListData(newResults.toArray(new String[0]));
+		window.repaint();
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 public class Model extends Observable {
@@ -18,8 +19,8 @@ public class Model extends Observable {
         advancedSearcher = new AdvancedSearch();
     }
 
-    public void search(String query) throws Exception {
-        System.out.println(searcher.search(query));
+    public List<String> search(String query) throws Exception {
+        return searcher.search(query);
     }
     
     public void advancedSearch(String term, String play, String field, String speaker) throws Exception{

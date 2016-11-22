@@ -41,7 +41,7 @@ public class Controller implements ActionListener {
                 try {
                 	System.out.println(gui.getSimpleSearch());
                 	model.updateHistory(gui.getSimpleSearch());
-                    model.search(gui.getSimpleSearch());
+                    gui.updateResults(model.search(gui.getSimpleSearch()));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
