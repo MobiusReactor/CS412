@@ -14,6 +14,9 @@ import com.sun.imageio.plugins.common.InputStreamAdapter;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -30,6 +33,7 @@ public class Window {
 	private ArrayList<String> history = new ArrayList<String>();
 	private JList<String> searchResults;
 	private JFrame window;
+	private JTextPane document;
 
 	public Window (ActionListener l){
 		listener = l;
@@ -78,14 +82,15 @@ public class Window {
 		searchResults = new JList<String>(results);
 		searchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		searchResults.setLayoutOrientation(JList.VERTICAL);
+		searchResults.addMouseListener((MouseListener) listener);
 
 		JScrollPane resultScrollPane = new JScrollPane(searchResults);
 		resultScrollPane.setBounds(10, 230, 200, 330);
 		window.add(resultScrollPane);
 
 
-		JTextPane document = new JTextPane();
-//		document.setEditable(false);
+		document = new JTextPane();
+		document.setEditable(false);
 
 		JScrollPane documentScrollPane = new JScrollPane(document);
 		documentScrollPane.setBounds(220, 10, 570, 550);
@@ -107,6 +112,14 @@ public class Window {
 	public void updateResults(List<String> newResults){
 		searchResults.setListData(newResults.toArray(new String[0]));
 		window.repaint();
+	}
+
+	public String getSelectedResult() {
+		return searchResults.getSelectedValue();
+	}
+
+	public void updateMainPane(String text) {
+		document.setText(text);
 	}
 	
 }

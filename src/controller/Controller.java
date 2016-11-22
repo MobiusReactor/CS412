@@ -1,20 +1,19 @@
 package controller;
 
 import model.Model;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import view.Window;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by rokas on 16.11.17.
  */
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, MouseListener {
     private Model model;
     private Window gui;
 
@@ -47,5 +46,38 @@ public class Controller implements ActionListener {
                 }
                 break;
         }
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        File input = new File(gui.getSelectedResult());
+        try {
+            Document doc = Jsoup.parse(input,"UTF-8","");
+            gui.updateMainPane(doc.body().toString());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

@@ -70,7 +70,7 @@ public class SimpleSearch {
             Document doc = searcher.doc(hits[i].doc);
             String path = doc.get("path");
             if (path != null) {
-                result.add((i + 1) + ". " + path);
+                result.add(path);
             }
         }
         return result;
