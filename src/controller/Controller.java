@@ -38,12 +38,15 @@ public class Controller implements ActionListener, MouseListener {
         switch (e.getActionCommand()) {
             case "Search":
                 try {
-                	System.out.println(gui.getSimpleSearch());
-                	model.updateHistory(gui.getSimpleSearch());
+                	if(model.search(gui.getSimpleSearch()).size() > 0){
+                		model.updateHistory(gui.getSimpleSearch());
+                	}
                     gui.updateResults(model.search(gui.getSimpleSearch()));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
+            case "comboBoxChanged":
+            	gui.getSimpleSearchField().setText((String) gui.getHistoryChoice().getSelectedItem());
                 break;
         }
     }

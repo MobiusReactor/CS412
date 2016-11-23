@@ -6,6 +6,7 @@ import model.Model;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
+import org.apache.lucene.util.ArrayUtil;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,7 +32,9 @@ public class Window {
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
 	private ActionListener listener;
-	private ArrayList<String> history = new ArrayList<String>();
+	private String[] history = new String[10];
+	private ArrayList<String> autoComplete = new ArrayList<String>();
+	private JComboBox<String> historyChoice;
 	private JList<String> searchResults;
 	private JFrame window;
 	private JTextPane document;
@@ -40,6 +44,7 @@ public class Window {
 	}
 
 	public void createAndShowGUI() {
+		setAutoComplete();
 		window = new JFrame("Shakespeare Search System");
 		
 		ImageIcon image = new ImageIcon("Shakespeare.jpg");
@@ -63,7 +68,17 @@ public class Window {
         		searchField = new JTextField(10);
         		searchField.setEditable(true);
         		simpleSearch.add(searchField);
-        		AutoCompleteDecorator.decorate(searchField, history, false);
+        		AutoCompleteDecorator.decorate(searchField, autoComplete, false);
+        		
+        		JLabel historyLabel = new JLabel("Search History: ");
+        		simpleSearch.add(historyLabel);
+        		
+        		historyChoice = new JComboBox<String>(history);
+        		historyChoice.setPrototypeDisplayValue("Search History");
+        		historyChoice.setSelectedIndex(-1);
+        		historyChoice.setMaximumRowCount(10);
+        		historyChoice.addActionListener(listener);
+        		simpleSearch.add(historyChoice);
         		
         		JButton b = new JButton("Search");
         		b.addActionListener(listener);
@@ -106,7 +121,10 @@ public class Window {
 	}
 	
 	public void setHistory(ArrayList<String> hist){
-		history = hist; 
+		Collections.reverse(hist);
+		for(int i = 0; i < hist.size() && i < 11; i++){
+			history[i] = hist.get(i);
+		}
 	}
 
 	public void updateResults(List<String> newResults){
@@ -120,6 +138,19 @@ public class Window {
 
 	public void updateMainPane(String text) {
 		document.setText(text);
+	}
+	
+	public JComboBox<String> getHistoryChoice(){
+		return historyChoice;
+	}
+	
+	public JTextField getSimpleSearchField(){
+		return (JTextField) searchField;
+	}
+	
+	private void setAutoComplete(){
+		autoComplete.add("Hamlet");
+		autoComplete.add("Othello");	
 	}
 	
 }

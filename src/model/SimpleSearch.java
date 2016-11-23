@@ -45,11 +45,7 @@ public class SimpleSearch {
 
 
         return doSearch(searcher,query);
-        
-        
-       
-        
-       
+   
     }
 
 
