@@ -2,16 +2,12 @@ package view;
 
 import controller.Controller;
 import model.Model;
-
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
-
 import org.apache.lucene.util.ArrayUtil;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
-
 import com.sun.imageio.plugins.common.InputStreamAdapter;
-
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionListener;
@@ -27,7 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class Window {
-	private String[] results = {""};
+	private String[] results = { "" };
 
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
@@ -39,17 +35,17 @@ public class Window {
 	private JFrame window;
 	private JTextPane document;
 
-	public Window (ActionListener l){
+	public Window(ActionListener l) {
 		listener = l;
 	}
 
 	public void createAndShowGUI() {
 		setAutoComplete();
 		window = new JFrame("Shakespeare Search System");
-		
+
 		ImageIcon image = new ImageIcon("Shakespeare.jpg");
 		window.setIconImage(image.getImage());
-		
+
 		window.setBounds(200, 200, 800, 600);
 
 		window.setLayout(null);
@@ -60,31 +56,31 @@ public class Window {
 
 
 		SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+			public void run() {
 
-        		JLabel l = new JLabel("Enter Search Term");
-        		simpleSearch.add(l);
-        		
-        		searchField = new JTextField(10);
-        		searchField.setEditable(true);
-        		simpleSearch.add(searchField);
-        		AutoCompleteDecorator.decorate(searchField, autoComplete, false);
-        		
-        		JLabel historyLabel = new JLabel("Search History: ");
-        		simpleSearch.add(historyLabel);
-        		
-        		historyChoice = new JComboBox<String>(history);
-        		historyChoice.setPrototypeDisplayValue("Search History");
-        		historyChoice.setSelectedIndex(-1);
-        		historyChoice.setMaximumRowCount(10);
-        		historyChoice.addActionListener(listener);
-        		simpleSearch.add(historyChoice);
-        		
-        		JButton b = new JButton("Search");
-        		b.addActionListener(listener);
-        		simpleSearch.add(b);
-            }
-        });
+				JLabel l = new JLabel("Enter Search Term");
+				simpleSearch.add(l);
+
+				searchField = new JTextField(10);
+				searchField.setEditable(true);
+				simpleSearch.add(searchField);
+				AutoCompleteDecorator.decorate(searchField, autoComplete, false);
+
+				JLabel historyLabel = new JLabel("Search History: ");
+				simpleSearch.add(historyLabel);
+
+				historyChoice = new JComboBox<String>(history);
+				historyChoice.setPrototypeDisplayValue("Search History");
+				historyChoice.setSelectedIndex(-1);
+				historyChoice.setMaximumRowCount(10);
+				historyChoice.addActionListener(listener);
+				simpleSearch.add(historyChoice);
+
+				JButton b = new JButton("Search");
+				b.addActionListener(listener);
+				simpleSearch.add(b);
+			}
+		});
 
 
 		JPanel advancedSearch = new AdvancedSearchPanel(listener);
@@ -105,6 +101,7 @@ public class Window {
 
 
 		document = new JTextPane();
+		document.setContentType("text/html");
 		document.setEditable(false);
 
 		JScrollPane documentScrollPane = new JScrollPane(document);
@@ -114,20 +111,21 @@ public class Window {
 
 		window.setVisible(true);
 		window.setResizable(false);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public String getSimpleSearch() {
 		return searchField.getText();
 	}
-	
-	public void setHistory(ArrayList<String> hist){
+
+	public void setHistory(ArrayList<String> hist) {
 		Collections.reverse(hist);
-		for(int i = 0; i < hist.size() && i < 11; i++){
+		for (int i = 0; i < hist.size() && i < 11; i++) {
 			history[i] = hist.get(i);
 		}
 	}
 
-	public void updateResults(List<String> newResults){
+	public void updateResults(List<String> newResults) {
 		searchResults.setListData(newResults.toArray(new String[0]));
 		window.repaint();
 	}
@@ -139,18 +137,18 @@ public class Window {
 	public void updateMainPane(String text) {
 		document.setText(text);
 	}
-	
-	public JComboBox<String> getHistoryChoice(){
+
+	public JComboBox<String> getHistoryChoice() {
 		return historyChoice;
 	}
-	
-	public JTextField getSimpleSearchField(){
+
+	public JTextField getSimpleSearchField() {
 		return (JTextField) searchField;
 	}
-	
-	private void setAutoComplete(){
+
+	private void setAutoComplete() {
 		autoComplete.add("Hamlet");
-		autoComplete.add("Othello");	
+		autoComplete.add("Othello");
 	}
-	
+
 }

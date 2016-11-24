@@ -50,12 +50,15 @@ public class Model extends Observable {
     	try{
     		FileReader fr = new FileReader("History.txt");
     		BufferedReader br = new BufferedReader(fr);
+    		
     		String line = null;
     		while((line = br.readLine()) != null){
     			if(line.length() > 2 && !historyList.contains(line)){
     				historyList.add(line);
     			}
     		}
+    		
+    		br.close();
     	} catch(IOException e){
     		e.printStackTrace();
     	}
