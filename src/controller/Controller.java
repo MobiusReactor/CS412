@@ -12,7 +12,9 @@ import java.util.StringTokenizer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import model.AdvancedSearch;
 import model.Model;
+import model.Result;
 import view.Window;
 
 /**
@@ -40,10 +42,10 @@ public class Controller implements ActionListener, MouseListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		List<Result> results = new ArrayList<Result>();
+		
 		switch (e.getActionCommand()) {
 			case "Search":
-				List<String> results = new ArrayList<String>();
-
 				try {
 					results = model.search(gui.getSimpleSearch());
 				} catch (Exception e2) {
@@ -56,6 +58,18 @@ public class Controller implements ActionListener, MouseListener {
 				}
 
 				break;
+
+			case "Search2":
+				try {
+					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(), gui.getAdvancedSearchType(), gui.getAdvancedSearchSpeaker());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				gui.updateResults(results);
+				
+				break;
+
 			case "comboBoxChanged":
 				gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
 				break;

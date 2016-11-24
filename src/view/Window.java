@@ -1,29 +1,29 @@
 package view;
 
-import controller.Controller;
-import model.Model;
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import org.apache.lucene.util.ArrayUtil;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
-import com.sun.imageio.plugins.common.InputStreamAdapter;
-import java.awt.Component;
-import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import model.Result;
 
 public class Window {
-	private String[] results = { "" };
+	private Result[] results = {};
 
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
@@ -31,9 +31,10 @@ public class Window {
 	private String[] history = new String[10];
 	private ArrayList<String> autoComplete = new ArrayList<String>();
 	private JComboBox<String> historyChoice;
-	private JList<String> searchResults;
+	private JList<Result> searchResults;
 	private JFrame window;
 	private JTextPane document;
+	private AdvancedSearchPanel advancedSearch;
 
 	public Window(ActionListener l) {
 		listener = l;
@@ -83,14 +84,14 @@ public class Window {
 		});
 
 
-		JPanel advancedSearch = new AdvancedSearchPanel(listener);
+		advancedSearch = new AdvancedSearchPanel(listener);
 
 		searchPanel.addTab("Simple", simpleSearch);
 		searchPanel.addTab("Advanced", advancedSearch);
 
 		window.add(searchPanel);
 
-		searchResults = new JList<String>(results);
+		searchResults = new JList<Result>(results);
 		searchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		searchResults.setLayoutOrientation(JList.VERTICAL);
 		searchResults.addMouseListener((MouseListener) listener);
@@ -125,13 +126,14 @@ public class Window {
 		}
 	}
 
-	public void updateResults(List<String> newResults) {
-		searchResults.setListData(newResults.toArray(new String[0]));
+	public void updateResults(List<Result> results2) {
+		System.out.println("Displaying " + results2.size() + " results");
+		searchResults.setListData(results2.toArray(new Result[results2.size()]));
 		window.repaint();
 	}
 
 	public String getSelectedResult() {
-		return searchResults.getSelectedValue();
+		return searchResults.getSelectedValue().getPath();
 	}
 
 	public void updateMainPane(String text) {
@@ -144,6 +146,22 @@ public class Window {
 
 	public JTextField getSimpleSearchField() {
 		return (JTextField) searchField;
+	}
+
+	public String getAdvancedSearchTerm() {
+		return advancedSearch.getAdvancedSearchTerm();
+	}
+
+	public String getAdvancedSearchPlay() {
+		return advancedSearch.getAdvancedSearchPlay();
+	}
+
+	public String getAdvancedSearchType() {
+		return advancedSearch.getAdvancedSearchType();
+	}
+
+	public String getAdvancedSearchSpeaker() {
+		return advancedSearch.getAdvancedSearchSpeaker();
 	}
 
 	private void setAutoComplete() {

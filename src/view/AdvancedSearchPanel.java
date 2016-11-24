@@ -1,9 +1,7 @@
 package view;
 
 import javax.swing.*;
-
 import model.AdvancedSearch;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,8 +35,8 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 		characterLabel = new JLabel("Character");
 		characterBox = new JTextField(15);
 
-		searchButton = new JButton("Search");
-		searchButton.addActionListener(this);
+		searchButton = new JButton("Search2");
+		searchButton.addActionListener(listener);
 		add(searchButton);
 	}
 
@@ -56,21 +54,37 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 				remove(characterBox);
 				repaint();
 			}
-		} else if (e.getSource() == searchButton) {
-			if (typeBox.getSelectedItem().equals("Dialogue")) {
-				System.out.println("Searching for \"" + searchBox.getText() + "\" in Dialogue fields of the play \"" + playBox.getText() + "\", spoken by " + characterBox.getText());
-			} else {
-				System.out.println("Searching for \"" + searchBox.getText() + "\" in " + typeBox.getSelectedItem() + " fields of the play \"" + playBox.getText() + "\"");
-			}
-			
-			AdvancedSearch engine = new AdvancedSearch();
-			try {
-				engine.search(searchBox.getText(), playBox.getText(), typeBox.getSelectedItem().toString(), characterBox.getText());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
+//		} else if (e.getSource() == searchButton) {
+//			if (typeBox.getSelectedItem().equals("Dialogue")) {
+//				System.out.println("Searching for \"" + searchBox.getText() + "\" in Dialogue fields of the play \"" + playBox.getText() + "\", spoken by " + characterBox.getText());
+//			} else {
+//				System.out.println("Searching for \"" + searchBox.getText() + "\" in " + typeBox.getSelectedItem() + " fields of the play \"" + playBox.getText() + "\"");
+//			}
+//
+//			AdvancedSearch engine = new AdvancedSearch();
+//			try {
+//				engine.search(searchBox.getText(), playBox.getText(), typeBox.getSelectedItem().toString(), characterBox.getText());
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+
 		}
+	}
+
+	public String getAdvancedSearchTerm() {
+		return searchBox.getText();
+	}
+
+	public String getAdvancedSearchPlay() {
+		return playBox.getText();
+	}
+
+	public String getAdvancedSearchType() {
+		return typeBox.getSelectedItem().toString();
+	}
+
+	public String getAdvancedSearchSpeaker() {
+		return characterBox.getText();
 	}
 }
