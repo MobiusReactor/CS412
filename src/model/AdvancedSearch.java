@@ -28,7 +28,10 @@ public class AdvancedSearch {
 
 
     public void search(String userQuery, String play, String searchField, String speakerField) throws Exception {
-        String index = "index";
+        
+    	
+    	
+    	String index = "index";
         String field = "contents";
         String playTerm = null;
         String speaker = null;
@@ -36,8 +39,13 @@ public class AdvancedSearch {
         if(searchField != null && searchField.trim().length()>0){
         	if(searchField.equals("Scene Titles")){
         	field = "scene";
+        	index = "index_scenes";
         	}else if(searchField.equals("Stage Directions")){
         		field = "stagedir";
+        		index = "index_scenes";
+        	}else if(searchField.equals("All")){
+        		field = "contents";
+        		index = "index_simple";
         	}
         	}
         

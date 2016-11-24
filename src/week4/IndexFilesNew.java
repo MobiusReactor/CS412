@@ -60,7 +60,7 @@ public class IndexFilesNew {
 				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
 				+ "in INDEX_PATH that can be searched with SearchFiles";
 		String indexPath = "index";
-		String docsPath = null;
+		String docsPath = "data";
 		boolean create = true;
 		for (int i = 0; i < args.length; i++) {
 			if ("-index".equals(args[i])) {

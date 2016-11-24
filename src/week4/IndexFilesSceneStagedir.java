@@ -1,17 +1,19 @@
 package week4;
 
-
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE
- * file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file
- * to You under the Apache License, Version 2.0 006 * (the "License"); you may not use this file except in compliance
- * with 007 * the License. You may obtain a copy of the License at 008 * 009 *
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See
+ * the NOTICE file distributed with this work for additional information regarding copyright ownership. The
+ * ASF licenses this file to You under the Apache License, Version 2.0 006 * (the "License"); you may not use this file
+ * except in compliance with 007 * the License. You may obtain a copy of the License at 008 * 009 *
  * http://www.apache.org/licenses/LICENSE-2.0 010 * 011 * Unless required by applicable law or agreed to in writing,
  * software 012 * distributed under the License is distributed on an "AS IS" BASIS, 013 * WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. 014 * See the License for the specific language governing
  * permissions and 015 * limitations under the License. 016
  */
 import java.io.BufferedReader;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,9 +48,9 @@ import org.jsoup.parser.Parser;
  * 049 * This is a command-line application demonstrating simple Lucene indexing. 050 * Run it with no command-line
  * arguments for usage information. 051
  */
-public class IndexFiles {
+public class IndexFilesSceneStagedir {
 
-	private IndexFiles() {
+	private IndexFilesSceneStagedir() {
 	}
 
 	/** Index all text files under a directory. */
@@ -56,8 +58,8 @@ public class IndexFiles {
 		String usage = "java org.apache.lucene.demo.IndexFiles"
 				+ " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
 				+ "This indexes the documents in DOCS_PATH, creating a Lucene index"
-				+ "in INDEX_PATH that can be searched with SimpleSearch";
-		String indexPath = "index_simple";
+				+ "in INDEX_PATH that can be searched with SearchFiles";
+		String indexPath = "index_scenes";
 		String docsPath = "data";
 		boolean create = true;
 		for (int i = 0; i < args.length; i++) {
@@ -146,6 +148,8 @@ public class IndexFiles {
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					try {
 						indexDoc(writer, file, attrs.lastModifiedTime().toMillis());
+						//indexDocScenes(writer, file, attrs.lastModifiedTime().toMillis());
+
 					} catch (IOException ignore) {
 						// don't index files that can't be read.
 					}
@@ -154,11 +158,13 @@ public class IndexFiles {
 			});
 		} else {
 			indexDoc(writer, path, Files.getLastModifiedTime(path).toMillis());
+			//indexDocScenes(writer, path, Files.getLastModifiedTime(path).toMillis());
+
 		}
 	}
 
 	/** Indexes a single document */
-	static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
+	static void indexDocOriginal(IndexWriter writer, Path file, long lastModified) throws IOException {
 		try (InputStream stream = Files.newInputStream(file)) {
 			// make a new, empty document
 			Document doc = new Document();
@@ -178,16 +184,17 @@ public class IndexFiles {
 			// For example the long value 2011021714 would mean
 			// February 17, 2011, 2-3 PM.
 			doc.add(new LongPoint("modified", lastModified));
-			
 
 			// Add the contents of the file to a field named "contents". Specify a Reader,
 			// so that the text of the file is tokenized and indexed, but not stored.
 			// Note that FileReader expects the file to be in UTF-8 encoding.
 			// If that's not the case searching for special characters will fail.
-			doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))));
+			doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))));		
+			
+
+			// Indexing personae in plays
 			
 			String persona = "";
-			String titleOfPlay = "";
 			
 			String xml = readFile(file.toString(), StandardCharsets.UTF_8);
 			String extension = "";
@@ -207,16 +214,37 @@ public class IndexFiles {
 					
 				}
 				
-				titleOfPlay = newdoc.select("title").get(0).text();
-				
 			}
 			
 			doc.add(new TextField("persona", persona, Field.Store.NO));
 			
-			doc.add(new TextField("title",titleOfPlay, Field.Store.YES));
 			
+			// Indexing stagedir
 			
 
+			String stagedirs = "";
+			
+			String xml1 = readFile(file.toString(), StandardCharsets.UTF_8);
+			String extension1 = "";
+			int j = file.toString().lastIndexOf('.');
+			if (j > 0) {
+			    extension1 = file.toString().substring(j+1);
+			}
+			if(extension1.equals("xml")){
+				
+				
+				
+				org.jsoup.nodes.Document newdoc = Jsoup.parse(xml1,file.toString(),Parser.xmlParser());
+				
+				
+				for (org.jsoup.nodes.Element e : newdoc.select("stagedir")) {	
+					stagedirs += " ; " + e.text();
+					
+				}
+				
+			}
+			
+			doc.add(new TextField("stagedir", stagedirs, Field.Store.NO));
 			
 
 			if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
@@ -232,6 +260,76 @@ public class IndexFiles {
 			}
 		}
 	}
+	
+	
+	static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
+		try (InputStream stream = Files.newInputStream(file)) {
+			
+			String xml = readFile(file.toString(), StandardCharsets.UTF_8);
+			String extension = "";
+			int i = file.toString().lastIndexOf('.');
+			if (i > 0) {
+			    extension = file.toString().substring(i+1);
+			}
+			if(extension.equals("xml")){
+				
+				
+				
+				org.jsoup.nodes.Document newdoc = Jsoup.parse(xml,file.toString(),Parser.xmlParser());
+				
+				String playTitle = newdoc.select("title").get(0).text();
+				
+				for(org.jsoup.nodes.Element act : newdoc.select("act")) {
+					
+				String actTitle = act.select("title").get(0).text();
+				
+				for (org.jsoup.nodes.Element sceneElement : act.select("scene")) {	
+					
+					
+					String scene = sceneElement.select("title").get(0).text();
+					
+					String stagedir = sceneElement.select("stagedir").get(0).text();
+
+					Document doc = new Document();
+					
+					Field pathField = new StringField("path", file.toString(), Field.Store.YES);
+					doc.add(pathField);
+					
+					doc.add(new LongPoint("modified", lastModified));
+					
+					doc.add(new TextField("title", playTitle,Field.Store.YES));
+					
+					doc.add(new StringField("act", actTitle,Field.Store.YES));
+					
+					doc.add(new TextField("scene", scene,Field.Store.YES));
+					
+					doc.add(new TextField("stagedir", stagedir,Field.Store.YES));
+
+
+					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
+						// New index, so we just add the document (no old document can be there):
+						System.out.println("adding " + file);
+						writer.addDocument(doc);
+					} else {
+						// Existing index (an old copy of this document may have been indexed) so
+						// we use updateDocument instead to replace the old one matching the exact
+						// path, if present:
+						System.out.println("updating " + file);
+						writer.updateDocument(new Term("path", file.toString()), doc);
+					}
+					
+					}
+				}
+				
+				
+			}
+			
+			
+
+			
+		}
+	}
+	
 	static String readFile(String path, Charset encoding) 
 			  throws IOException 
 			{
