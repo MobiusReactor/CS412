@@ -3,6 +3,7 @@ package controller;
 import model.Model;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import view.Window;
 
@@ -57,7 +58,7 @@ public class Controller implements ActionListener, MouseListener {
         File input = new File(gui.getSelectedResult());
         try {
             Document doc = Jsoup.parse(input,"UTF-8","");
-            gui.updateMainPane(doc.body().toString());
+            gui.updateMainPane(formatBody(doc));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -82,5 +83,25 @@ public class Controller implements ActionListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public String formatBody(Document doc) {
+        String body = null;
+        Element play = doc.select("play").first();
+        body = play.select("title").first().text() + "\n";
+        for (Element act : play.select("act")) {
+            body = body + act.select("title").first().text() + "\n";
+            for (Element scene : act.select("scene")) {
+                body = body + scene.select("title").first().text() + "\n";
+                for (Element speech : scene.select("speech")){
+                    body = body + speech.select("speaker").first().text() + "\n \n";
+                    for (Element line : speech.select("line")){
+                        body = body + line.text() + "\n";
+                    }
+                    body = body + "\n";
+                }
+            }
+        }
+        return body;
     }
 }
