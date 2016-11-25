@@ -40,30 +40,6 @@ public class SimpleSearch {
 
 	}
 
-
-
-//    public List<String> doSearch(IndexSearcher searcher, Query query) throws IOException {
-//        List<String> result = new ArrayList<String>();
-//        // Collect enough docs to show 5 pages
-//        TopDocs results = searcher.search(query, 100);
-//        ScoreDoc[] hits = results.scoreDocs;
-//        
-//        
-//
-//        int numTotalHits = results.totalHits;
-//        
-//        System.out.println("HITS:" + numTotalHits);
-//
-//        for (int i = 0; i < numTotalHits; i++) {
-//            Document doc = searcher.doc(hits[i].doc);
-//            String path = doc.get("path");
-//            if (path != null) {
-//                result.add(path);
-//            }
-//        }
-//        return result;
-//    }
-
 	public List<Result> doSearch(IndexSearcher searcher, Query query) throws IOException {
 		List<Result> result = new ArrayList<Result>();
 		// Collect enough docs to show 5 pages
@@ -77,20 +53,13 @@ public class SimpleSearch {
 
 		for (int i = 0; i < numTotalHits; i++) {
 			Document doc = searcher.doc(hits[i].doc);
-			
-			System.out.println(doc.toString());
 
 			Result r = new Result();
+			r.setResultType("Simple");
 
 			String path = doc.get("path");
 			if (path != null) {
 				r.setPath(path);
-			}
-
-			String title = doc.get("title");
-			System.out.println("title: "+title);
-			if (title != null) {
-				r.setTitle(title);
 			}
 
 			result.add(r);

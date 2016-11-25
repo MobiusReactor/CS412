@@ -45,7 +45,7 @@ public class AdvancedSearch {
 			playTerm = "\"" + play + "\"";
 		}
 
-		if (speakerField != null && speakerField.trim().length() > 0) {
+		if (speakerField != null && speakerField.trim().length() > 0 && searchField.equals("Dialogue")) {
 			speaker = speakerField;
 		}
 
@@ -86,10 +86,10 @@ public class AdvancedSearch {
 		System.out.println("Searching for: " + query.toString(field));
 
 
-		return doSearch(searcher, query);
+		return doSearch(searcher, query, searchField);
 	}
 
-	public List<Result> doSearch(IndexSearcher searcher, Query query) throws IOException {
+	public List<Result> doSearch(IndexSearcher searcher, Query query, String type) throws IOException {
 		List<Result> resultList = new ArrayList<Result>();
 		// Collect enough docs to show 5 pages
 		TopDocs results = searcher.search(query, 100);
@@ -102,39 +102,19 @@ public class AdvancedSearch {
 		for (int i = 0; i < numTotalHits; i++) {
 
 			Result r = new Result();
+			r.setResultType(type);
 
 			Document doc = searcher.doc(hits[i].doc);
-			String path = doc.get("path");
 
-			r.setPath(path);
+			r.setPath(doc.get("path"));
+			r.setTitle(doc.get("title"));
+			r.setAct(doc.get("act"));
+			r.setScene(doc.get("scene"));
+			r.setSpeaker(doc.get("speaker"));
+			
+			System.out.println(doc.get("stagedir"));
 
-			if (path != null) {
-				System.out.println((i + 1) + ". " + path);
-				String title = doc.get("title");
-				r.setTitle(title);
-
-				if (title != null) {
-					System.out.println("   Title: " + title);
-
-					String act = doc.get("act");
-					if (act != null) {
-						System.out.println("   Act: " + act);
-						r.setAct(act);
-
-						String scene = doc.get("scene");
-						if (scene != null) {
-							System.out.println("   Scene: " + scene);
-							r.setScene(scene);
-
-							String speaker = doc.get("speaker");
-
-							if (speaker != null) {
-								System.out.println("   Speaker: " + speaker);
-							}
-						}
-					}
-				}
-			}
+			System.out.println((i + 1) + ". " + r.toString());
 
 			resultList.add(r);
 		}

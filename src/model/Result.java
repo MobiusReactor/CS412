@@ -6,7 +6,8 @@ public class Result {
 	private String title;
 	private String act;
 	private String scene;
-	private String stageDir;
+
+	private String resultType;
 
 	public String getPath() {
 		return path;
@@ -18,7 +19,6 @@ public class Result {
 
 	public void setTitle(String title) {
 		this.title = title;
-		System.out.println("Title set to " + title);
 	}
 
 	public void setAct(String act) {
@@ -29,15 +29,40 @@ public class Result {
 		this.scene = scene;
 	}
 
+	public void setSpeaker(String speaker) {
+		this.speaker = speaker;
+	}
+
+	public void setResultType(String resultType) {
+		this.resultType = resultType;
+	}
+
 	@Override
 	public String toString() {
-		String s = "<html>"
-				+ title + "<br>"
-				+ act + "<br>"
-				+ scene + "<br>"
-				+ "-"
-				+ "</html>";
-
-		return s;
+		switch (resultType) {
+			case "Scene Titles":
+			case "Stage Directions":
+				return "<html>"
+						+ title + "<br>"
+						+ act + "<br>"
+						+ scene + "<br>"
+						+ "-"
+						+ "</html>";
+			case "Dialogue":
+				return "<html>"
+						+ title + "<br>"
+						+ act + "<br>"
+						+ scene + "<br>"
+						+ speaker + "<br>"
+						+ "-"
+						+ "</html>";
+			case "Simple":
+			case "All":
+			default:
+				return "<html>"
+						+ path + "<br>"
+						+ "-"
+						+ "</html>";
+		}
 	}
 }

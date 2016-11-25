@@ -12,7 +12,6 @@ import java.util.StringTokenizer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import model.AdvancedSearch;
 import model.Model;
 import model.Result;
 import view.Window;
@@ -23,6 +22,7 @@ import view.Window;
 public class Controller implements ActionListener, MouseListener {
 	private Model model;
 	private Window gui;
+	private static final String sp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 	public Controller() {
 	}
@@ -43,31 +43,26 @@ public class Controller implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		List<Result> results = new ArrayList<Result>();
-		
+
 		switch (e.getActionCommand()) {
 			case "Search":
 				try {
-					results = model.search(gui.getSimpleSearch());
-				} catch (Exception e2) {
-					e2.printStackTrace();
+
+					if (gui.getSearchType().equals("Simple")) {
+						results = model.search(gui.getSimpleSearch());
+					} else {
+						results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(), gui.getSearchType(), gui.getAdvancedSearchSpeaker());
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 
-				if (results.size() > 0) {
+				if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
 					model.updateHistory(gui.getSimpleSearch());
-					gui.updateResults(results);
 				}
 
-				break;
-
-			case "Search2":
-				try {
-					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(), gui.getAdvancedSearchType(), gui.getAdvancedSearchSpeaker());
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				
 				gui.updateResults(results);
-				
+
 				break;
 
 			case "comboBoxChanged":
@@ -117,15 +112,40 @@ public class Controller implements ActionListener, MouseListener {
 		String body = null;
 		Element play = doc.select("play").first();
 		body = "<h1>" + play.select("title").first().text() + "</h1><br>";
+
 		for (Element act : play.select("act")) {
 			body = body + "<h2>" + act.select("title").first().text() + "</h2><br>";
+
 			for (Element scene : act.select("scene")) {
 				body = body + "<h3>" + scene.select("title").first().text() + "</h3><br>";
-				for (Element speech : scene.select("speech")) {
-					body = body + "<h4>" + speech.select("speaker").first().text() + "</h4>";
-					for (Element line : speech.select("line")) {
-						body = body + line.text() + "<br>";
+
+				for (Element speech : scene.children()) {
+
+					if (speech.tagName().equals("speech")) {
+						for (Element line : speech.children()) {
+							if (line.tagName().equals("speaker")) {
+								body = body + "<b>" + line.text() + "</b><br>";
+
+							} else if (line.tagName().equals("stagedir")) {
+								body = body + "<b><i>" + line.text() + "</i></b><br>";
+
+							} else {
+								if (line.children().size() > 0) {
+									for (Element e : line.children()) {
+										if (e.tagName().equals("stagedir")) {
+											body = body + "<b><i>" + e.text() + "</i></b><br>";
+											body = body + sp + line.text().substring(e.text().length()) + "<br>";
+										}
+									}
+								} else {
+									body = body + sp + line.text() + "<br>";
+								}
+							}
+						}
+					} else if (speech.tagName().equals("stagedir")) {
+						body = body + "<b><i>" + speech.text() + "</i></b><br>";
 					}
+
 					body = body + "<br>";
 				}
 			}

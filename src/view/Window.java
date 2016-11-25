@@ -35,6 +35,7 @@ public class Window {
 	private JFrame window;
 	private JTextPane document;
 	private AdvancedSearchPanel advancedSearch;
+	JTabbedPane searchPanel;
 
 	public Window(ActionListener l) {
 		listener = l;
@@ -52,7 +53,7 @@ public class Window {
 		window.setLayout(null);
 
 
-		JTabbedPane searchPanel = new JTabbedPane();
+		searchPanel = new JTabbedPane();
 		searchPanel.setBounds(10, 10, 200, 210);
 
 
@@ -126,9 +127,8 @@ public class Window {
 		}
 	}
 
-	public void updateResults(List<Result> results2) {
-		System.out.println("Displaying " + results2.size() + " results");
-		searchResults.setListData(results2.toArray(new Result[results2.size()]));
+	public void updateResults(List<Result> results) {
+		searchResults.setListData(results.toArray(new Result[results.size()]));
 		window.repaint();
 	}
 
@@ -148,20 +148,24 @@ public class Window {
 		return (JTextField) searchField;
 	}
 
+	public String getSearchType() {
+		if (searchPanel.getSelectedIndex() == 0) {
+			return "Simple";
+		} else {
+			return advancedSearch.getType();
+		}
+	}
+
 	public String getAdvancedSearchTerm() {
-		return advancedSearch.getAdvancedSearchTerm();
+		return advancedSearch.getTerm();
 	}
 
 	public String getAdvancedSearchPlay() {
-		return advancedSearch.getAdvancedSearchPlay();
-	}
-
-	public String getAdvancedSearchType() {
-		return advancedSearch.getAdvancedSearchType();
+		return advancedSearch.getPlay();
 	}
 
 	public String getAdvancedSearchSpeaker() {
-		return advancedSearch.getAdvancedSearchSpeaker();
+		return advancedSearch.getSpeaker();
 	}
 
 	private void setAutoComplete() {
