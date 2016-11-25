@@ -51,10 +51,12 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 				add(characterLabel);
 				add(characterBox);
 				add(searchButton);
+				revalidate();
 				repaint();
 			} else {
 				remove(characterLabel);
 				remove(characterBox);
+				revalidate();
 				repaint();
 			}
 		}

@@ -48,13 +48,13 @@ public class Window {
 		ImageIcon image = new ImageIcon("Shakespeare.jpg");
 		window.setIconImage(image.getImage());
 
-		window.setBounds(200, 200, 800, 600);
+		window.setBounds(200, 200, 1024, 768);
 
 		window.setLayout(null);
 
 
 		searchPanel = new JTabbedPane();
-		searchPanel.setBounds(10, 10, 200, 210);
+		searchPanel.setBounds(35, 10, 200, 235);
 
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -98,7 +98,7 @@ public class Window {
 		searchResults.addMouseListener((MouseListener) listener);
 
 		JScrollPane resultScrollPane = new JScrollPane(searchResults);
-		resultScrollPane.setBounds(10, 230, 200, 330);
+		resultScrollPane.setBounds(10, 255, 250, 475);
 		window.add(resultScrollPane);
 
 
@@ -107,7 +107,7 @@ public class Window {
 		document.setEditable(false);
 
 		JScrollPane documentScrollPane = new JScrollPane(document);
-		documentScrollPane.setBounds(220, 10, 570, 550);
+		documentScrollPane.setBounds(270, 10, 740, 720);
 
 		window.add(documentScrollPane);
 
