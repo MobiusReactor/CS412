@@ -288,7 +288,12 @@ public class IndexFilesSceneStagedir {
 					
 					String scene = sceneElement.select("title").get(0).text();
 					
-					String stagedir = sceneElement.select("stagedir").get(0).text();
+					String stagedir = null;
+					
+					for (org.jsoup.nodes.Element e : sceneElement.select("stagedir")) {	
+						stagedir += " ; " + e.text();
+						
+					}
 
 					Document doc = new Document();
 					
@@ -303,7 +308,7 @@ public class IndexFilesSceneStagedir {
 					
 					doc.add(new TextField("scene", scene,Field.Store.YES));
 					
-					doc.add(new TextField("stagedir", stagedir,Field.Store.YES));
+					doc.add(new TextField("stagedir", stagedir,Field.Store.NO));
 
 
 					if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {

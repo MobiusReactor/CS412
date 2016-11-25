@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -66,9 +67,14 @@ public class AdvancedSearch {
 		// This parser if one field is selected
 		parser = new QueryParser(field, analyzer);
 //        }
+        
+        String searchQuery;
 
-
-		String searchQuery = "(" + field + ":" + userQuery.trim() + ")";
+//        if(field.equals("All")){
+//        	searchQuery = userQuery.trim();
+//        }else{
+        	searchQuery = "(" + field + ":" + userQuery.trim() + ")";
+//        }
 
 		if (playTerm != null) {
 			searchQuery = searchQuery + " AND title:" + playTerm + "";
