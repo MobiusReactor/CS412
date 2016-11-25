@@ -24,3 +24,6 @@ macbeth
 macbeth
 macbeth
 index
+walk
+Hath
+able
