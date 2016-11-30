@@ -5,8 +5,10 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,7 +21,9 @@ import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
+
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import model.Result;
 
 public class Window {
@@ -28,10 +32,11 @@ public class Window {
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
 	private ActionListener listener;
-	private String[] history = new String[11];
+	private String[] history = new String[10];
 	private ArrayList<String> autoComplete = new ArrayList<String>();
 	private JComboBox<String> historyChoice;
 	private JList<Result> searchResults;
+	private JCheckBox stemCheck;
 	private JFrame window;
 	private JTextPane document;
 	private AdvancedSearchPanel advancedSearch;
@@ -78,6 +83,9 @@ public class Window {
 				historyChoice.setMaximumRowCount(10);
 				historyChoice.addActionListener(listener);
 				simpleSearch.add(historyChoice);
+				
+				stemCheck = new JCheckBox("Use Stemming?");
+				simpleSearch.add(stemCheck);
 
 				JButton b = new JButton("Search");
 				b.addActionListener(listener);
@@ -127,6 +135,9 @@ public class Window {
 	}
 
 	public void setHistory(ArrayList<String> hist) {
+		if(hist.size() < 10){
+			history = new String[hist.size()];
+		}
 		Collections.reverse(hist);
 		for (int i = 0; i < hist.size() && i < 11; i++) {
 			history[i] = hist.get(i);
@@ -183,6 +194,10 @@ public class Window {
 	public void updateTotalResults(){
 		totalResults.setText("Total Results: " + searchResults.getModel().getSize());
 		totalResults.setVisible(true);
+	}
+	
+	public boolean useStem(){
+		return stemCheck.isSelected();
 	}
 
 }
