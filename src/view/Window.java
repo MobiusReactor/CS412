@@ -28,7 +28,7 @@ public class Window {
 	private JPanel simpleSearch = new JPanel();
 	private JTextComponent searchField;
 	private ActionListener listener;
-	private String[] history = new String[10];
+	private String[] history = new String[11];
 	private ArrayList<String> autoComplete = new ArrayList<String>();
 	private JComboBox<String> historyChoice;
 	private JList<Result> searchResults;
@@ -36,6 +36,7 @@ public class Window {
 	private JTextPane document;
 	private AdvancedSearchPanel advancedSearch;
 	JTabbedPane searchPanel;
+	private JLabel totalResults;
 
 	public Window(ActionListener l) {
 		listener = l;
@@ -54,7 +55,7 @@ public class Window {
 
 
 		searchPanel = new JTabbedPane();
-		searchPanel.setBounds(35, 10, 200, 235);
+		searchPanel.setBounds(35, 10, 200, 200);
 
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -91,6 +92,11 @@ public class Window {
 		searchPanel.addTab("Advanced", advancedSearch);
 
 		window.add(searchPanel);
+
+		totalResults = new JLabel("Total Results: ");
+		totalResults.setBounds(135,225,130,20);
+		totalResults.setVisible(false);
+		window.add(totalResults);
 
 		searchResults = new JList<Result>(results);
 		searchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -129,6 +135,7 @@ public class Window {
 
 	public void updateResults(List<Result> results) {
 		searchResults.setListData(results.toArray(new Result[results.size()]));
+		updateTotalResults();
 		window.repaint();
 	}
 
@@ -171,6 +178,11 @@ public class Window {
 	private void setAutoComplete() {
 		autoComplete.add("Hamlet");
 		autoComplete.add("Othello");
+	}
+
+	public void updateTotalResults(){
+		totalResults.setText("Total Results: " + searchResults.getModel().getSize());
+		totalResults.setVisible(true);
 	}
 
 }
