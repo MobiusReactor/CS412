@@ -49,6 +49,7 @@ public class Controller implements ActionListener, MouseListener {
 
 		switch (e.getActionCommand()) {
 		case "Search":
+			long start = System.nanoTime();
 			try {
 
 				if (gui.getSearchType().equals("Simple")) {
@@ -65,7 +66,8 @@ public class Controller implements ActionListener, MouseListener {
 				model.updateHistory(gui.getSimpleSearch());
 			}
 
-			gui.updateResults(results);
+			long time = System.nanoTime()-start;
+			gui.updateResults(results, time);
 
 			break;
 

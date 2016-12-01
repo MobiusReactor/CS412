@@ -2,6 +2,7 @@ package view;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -102,8 +104,8 @@ public class Window {
 
 		window.add(searchPanel);
 
-		totalResults = new JLabel("Total Results: ");
-		totalResults.setBounds(135, 215, 130, 20);
+		totalResults = new JLabel("Total Results: ", SwingConstants.RIGHT);
+		totalResults.setBounds(10, 215, 250, 20);
 		totalResults.setVisible(false);
 		window.add(totalResults);
 
@@ -131,7 +133,7 @@ public class Window {
 		documentScrollPane.setBounds(270, 20, 740, 710);
 
 		window.add(documentScrollPane);
-		
+
 		searchPanel.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -162,15 +164,15 @@ public class Window {
 		}
 	}
 
-	public void updateResults(List<Result> results) {
+	public void updateResults(List<Result> results, long time) {
 		Collections.sort(results, (o1, o2) -> {
-            if(o1.getScore() == o2.getScore())
-                return 0;
-            return o1.getScore() > o2.getScore() ? -1 : 1;
-        });
+			if (o1.getScore() == o2.getScore())
+				return 0;
+			return o1.getScore() > o2.getScore() ? -1 : 1;
+		});
 		Result[] r = results.toArray(new Result[results.size()]);
 		searchResults.setListData(r);
-		updateTotalResults();
+		updateTotalResults(time);
 		window.repaint();
 	}
 
@@ -215,8 +217,10 @@ public class Window {
 		autoComplete.add("Othello");
 	}
 
-	public void updateTotalResults() {
-		totalResults.setText("Total Results: " + searchResults.getModel().getSize());
+	public void updateTotalResults(long time) {
+		DecimalFormat d = new DecimalFormat("#.####");
+		String t = d.format(time / 1000000000.0);
+		totalResults.setText("Total Results: " + searchResults.getModel().getSize() + " (" + t + "s)");
 		totalResults.setVisible(true);
 	}
 
@@ -227,16 +231,16 @@ public class Window {
 	public void setSearchType() {
 		if (getSearchType().equals("Dialogue")) {
 			searchPanel.setBounds(35, 10, 200, 230);
-			totalResults.setBounds(135, 255, 130, 20);
+			totalResults.setBounds(10, 255, 250, 20);
 			resultScrollPane.setBounds(10, 285, 250, 445);
 		} else {
 			searchPanel.setBounds(35, 10, 200, 190);
-			totalResults.setBounds(135, 215, 130, 20);
+			totalResults.setBounds(10, 215, 250, 20);
 			resultScrollPane.setBounds(10, 245, 250, 485);
 		}
 	}
 
-	public void setTotalDocMatches(int counter){
+	public void setTotalDocMatches(int counter) {
 		totalDocMatches.setText("Total Document Matches: " + counter);
 		totalDocMatches.setVisible(true);
 	}
