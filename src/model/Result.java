@@ -6,7 +6,8 @@ public class Result {
 	private String title;
 	private String act;
 	private String scene;
-
+	private int hits;
+	private float score;
 	private String resultType;
 
 	public String getPath() {
@@ -64,5 +65,21 @@ public class Result {
 						+ "-"
 						+ "</html>";
 		}
+	}
+
+	public int getHits() {
+		return hits;
+	}
+
+	public void setHits(int hits) {
+		this.hits = hits;
+	}
+
+	public float getScore() {
+		return score;
+	}
+
+	public void setScore(float score) {
+		this.score = score;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -155,7 +156,13 @@ public class Window {
 	}
 
 	public void updateResults(List<Result> results) {
-		searchResults.setListData(results.toArray(new Result[results.size()]));
+		Collections.sort(results, (o1, o2) -> {
+            if(o1.getScore() == o2.getScore())
+                return 0;
+            return o1.getScore() > o2.getScore() ? -1 : 1;
+        });
+		Result[] r = results.toArray(new Result[results.size()]);
+		searchResults.setListData(r);
 		updateTotalResults();
 		window.repaint();
 	}
