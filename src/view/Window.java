@@ -43,6 +43,7 @@ public class Window {
 	private JTabbedPane searchPanel;
 	private JLabel totalResults;
 	private JScrollPane resultScrollPane;
+	private JLabel totalDocMatches;
 
 	public Window(ActionListener l) {
 		listener = l;
@@ -106,6 +107,12 @@ public class Window {
 		totalResults.setVisible(false);
 		window.add(totalResults);
 
+
+		totalDocMatches = new JLabel("Total Document Matches: ");
+		totalDocMatches.setBounds(800, 0, 200, 20);
+		totalDocMatches.setVisible(false);
+		window.add(totalDocMatches);
+
 		searchResults = new JList<Result>(results);
 		searchResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		searchResults.setLayoutOrientation(JList.VERTICAL);
@@ -121,7 +128,7 @@ public class Window {
 		document.setEditable(false);
 
 		JScrollPane documentScrollPane = new JScrollPane(document);
-		documentScrollPane.setBounds(270, 10, 740, 720);
+		documentScrollPane.setBounds(270, 20, 740, 710);
 
 		window.add(documentScrollPane);
 		
@@ -227,5 +234,10 @@ public class Window {
 			totalResults.setBounds(135, 215, 130, 20);
 			resultScrollPane.setBounds(10, 245, 250, 485);
 		}
+	}
+
+	public void setTotalDocMatches(int counter){
+		totalDocMatches.setText("Total Document Matches: " + counter);
+		totalDocMatches.setVisible(true);
 	}
 }

@@ -112,6 +112,7 @@ public class AdvancedSearch {
 			r.setAct(doc.get("act"));
 			r.setScene(doc.get("scene"));
 			r.setSpeaker(doc.get("speaker"));
+			r.setScore(hits[i].score);
 			
 			//System.out.println(doc.get("stagedir"));
 

@@ -211,9 +211,8 @@ public class Controller implements ActionListener, MouseListener {
 
 				body = sb.toString();
 
-				System.out.println("Matches for this document: " + counter);
+				gui.setTotalDocMatches(counter);
 
-				// Update gui with the matches for the document stored in counter
 				
 				
 			}
