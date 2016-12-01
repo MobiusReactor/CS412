@@ -13,8 +13,11 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 	private JLabel characterLabel;
 	private JTextField searchBox, playBox, characterBox;
 	private JButton searchButton;
+	private Window gui;
 
-	public AdvancedSearchPanel(ActionListener listener) {
+	public AdvancedSearchPanel(ActionListener listener, Window gui) {
+		this.gui = gui;
+
 		JLabel searchLabel = new JLabel("Enter Search Term");
 		add(searchLabel);
 
@@ -59,6 +62,7 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 				revalidate();
 				repaint();
 			}
+			gui.setSearchType();
 		}
 	}
 

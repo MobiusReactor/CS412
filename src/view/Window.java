@@ -5,7 +5,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -21,9 +20,7 @@ import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
-
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import model.Result;
 
 public class Window {
@@ -40,8 +37,9 @@ public class Window {
 	private JFrame window;
 	private JTextPane document;
 	private AdvancedSearchPanel advancedSearch;
-	JTabbedPane searchPanel;
+	private JTabbedPane searchPanel;
 	private JLabel totalResults;
+	private JScrollPane resultScrollPane;
 
 	public Window(ActionListener l) {
 		listener = l;
@@ -60,7 +58,7 @@ public class Window {
 
 
 		searchPanel = new JTabbedPane();
-		searchPanel.setBounds(35, 10, 200, 200);
+		searchPanel.setBounds(35, 10, 200, 190);
 
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -83,7 +81,7 @@ public class Window {
 				historyChoice.setMaximumRowCount(10);
 				historyChoice.addActionListener(listener);
 				simpleSearch.add(historyChoice);
-				
+
 				stemCheck = new JCheckBox("Use Stemming?");
 				simpleSearch.add(stemCheck);
 
@@ -94,7 +92,7 @@ public class Window {
 		});
 
 
-		advancedSearch = new AdvancedSearchPanel(listener);
+		advancedSearch = new AdvancedSearchPanel(listener, this);
 
 		searchPanel.addTab("Simple", simpleSearch);
 		searchPanel.addTab("Advanced", advancedSearch);
@@ -102,7 +100,7 @@ public class Window {
 		window.add(searchPanel);
 
 		totalResults = new JLabel("Total Results: ");
-		totalResults.setBounds(135,225,130,20);
+		totalResults.setBounds(135, 215, 130, 20);
 		totalResults.setVisible(false);
 		window.add(totalResults);
 
@@ -111,8 +109,8 @@ public class Window {
 		searchResults.setLayoutOrientation(JList.VERTICAL);
 		searchResults.addMouseListener((MouseListener) listener);
 
-		JScrollPane resultScrollPane = new JScrollPane(searchResults);
-		resultScrollPane.setBounds(10, 255, 250, 475);
+		resultScrollPane = new JScrollPane(searchResults);
+		resultScrollPane.setBounds(10, 245, 250, 485);
 		window.add(resultScrollPane);
 
 
@@ -133,14 +131,13 @@ public class Window {
 	public String getSimpleSearch() {
 		return searchField.getText().trim();
 	}
-	
-	public int getSelectedSearch(){
+
+	public int getSelectedSearch() {
 		return searchPanel.getSelectedIndex();
 	}
-	
 
 	public void setHistory(ArrayList<String> hist) {
-		if(hist.size() < 10){
+		if (hist.size() < 10) {
 			history = new String[hist.size()];
 		}
 		Collections.reverse(hist);
@@ -196,13 +193,24 @@ public class Window {
 		autoComplete.add("Othello");
 	}
 
-	public void updateTotalResults(){
+	public void updateTotalResults() {
 		totalResults.setText("Total Results: " + searchResults.getModel().getSize());
 		totalResults.setVisible(true);
 	}
-	
-	public boolean useStem(){
+
+	public boolean useStem() {
 		return stemCheck.isSelected();
 	}
 
+	public void setSearchType() {
+		if (getSearchType().equals("Dialogue")) {
+			searchPanel.setBounds(35, 10, 200, 230);
+			totalResults.setBounds(135, 255, 130, 20);
+			resultScrollPane.setBounds(10, 285, 250, 445);
+		} else {
+			searchPanel.setBounds(35, 10, 200, 190);
+			totalResults.setBounds(135, 215, 130, 20);
+			resultScrollPane.setBounds(10, 245, 250, 485);
+		}
+	}
 }
