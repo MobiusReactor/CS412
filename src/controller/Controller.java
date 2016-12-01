@@ -183,11 +183,11 @@ public class Controller implements ActionListener, MouseListener {
 			m.appendTail(sb);
 
 			body = sb.toString();
-
-			//Update gui with counter
 			
-//			body = body.replaceAll(searchTerms,
-//					"<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>");
+			System.out.println("Matches for this document: " + counter);
+
+			// Update gui with the matches for the document stored in counter
+				
 		} else {
 			
 			StringTokenizer t = new StringTokenizer(searchTerms);
@@ -211,11 +211,11 @@ public class Controller implements ActionListener, MouseListener {
 
 				body = sb.toString();
 
-				//Update gui with counter
+				System.out.println("Matches for this document: " + counter);
+
+				// Update gui with the matches for the document stored in counter
 				
 				
-//				body = body.replaceAll("\\b" + token + "\\b",
-//						"<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>");
 			}
 		}
 

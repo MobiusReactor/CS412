@@ -57,24 +57,19 @@ public class AdvancedSearch {
 
 		QueryParser parser = null;
 
-//        if(field.equals("All")){
-////			This Parser of all fields are selected
-//        parser = new MultiFieldQueryParser(
-//                new String[]{"title", "scene", "speaker", "stagedir","contents"},
-//                analyzer);
-//        } else{
-
-		// This parser if one field is selected
+   
 		parser = new QueryParser(field, analyzer);
-//        }
+      
         
         String searchQuery;
+        
+        if(userQuery.toLowerCase().contains(" and ") || userQuery.toLowerCase().contains(" or ") ||
+        		userQuery.toLowerCase().contains(" + ") || userQuery.toLowerCase().contains(" not ")){
+        	
+        }
+     
+        searchQuery = "(" + field + ":" + userQuery.trim() + ")";
 
-//        if(field.equals("All")){
-//        	searchQuery = userQuery.trim();
-//        }else{
-        	searchQuery = "(" + field + ":" + userQuery.trim() + ")";
-//        }
 
 		if (playTerm != null) {
 			searchQuery = searchQuery + " AND title:" + playTerm + "";

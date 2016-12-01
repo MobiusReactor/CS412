@@ -131,7 +131,7 @@ public class Window {
 	}
 
 	public String getSimpleSearch() {
-		return searchField.getText();
+		return searchField.getText().trim();
 	}
 	
 	public int getSelectedSearch(){
@@ -180,15 +180,15 @@ public class Window {
 	}
 
 	public String getAdvancedSearchTerm() {
-		return advancedSearch.getTerm();
+		return advancedSearch.getTerm().trim();
 	}
 
 	public String getAdvancedSearchPlay() {
-		return advancedSearch.getPlay();
+		return advancedSearch.getPlay().trim();
 	}
 
 	public String getAdvancedSearchSpeaker() {
-		return advancedSearch.getSpeaker();
+		return advancedSearch.getSpeaker().trim();
 	}
 
 	private void setAutoComplete() {
