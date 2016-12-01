@@ -19,8 +19,8 @@ public class Model extends Observable {
 		advancedSearcher = new AdvancedSearch();
 	}
 
-	public List<Result> search(String query) throws Exception {
-		return searcher.search(query);
+	public List<Result> search(String query, boolean stem) throws Exception {
+		return searcher.search(query, stem);
 	}
 
 	public List<Result> search(String term, String play, String type, String speaker) throws Exception {

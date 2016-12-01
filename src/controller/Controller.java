@@ -53,7 +53,7 @@ public class Controller implements ActionListener, MouseListener {
 			try {
 
 				if (gui.getSearchType().equals("Simple")) {
-					results = model.search(gui.getSimpleSearch());
+					results = model.search(gui.getSimpleSearch(), gui.useStem());
 				} else {
 					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
 							gui.getSearchType(), gui.getAdvancedSearchSpeaker());

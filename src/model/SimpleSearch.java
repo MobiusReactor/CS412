@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -20,12 +23,19 @@ import org.apache.lucene.store.FSDirectory;
 public class SimpleSearch {
 
 
-	public List<Result> search(String userQuery) throws Exception {
+	public List<Result> search(String userQuery, boolean stem) throws Exception {
 		String index = "index_simple";
 		String field = "contents";
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
 		IndexSearcher searcher = new IndexSearcher(reader);
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = null;
+		
+		if(stem){
+			analyzer = new EnglishAnalyzer(CharArraySet.EMPTY_SET);
+		}
+		else{
+			analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
+		}
 
 		QueryParser parser = new QueryParser(field, analyzer);
 
