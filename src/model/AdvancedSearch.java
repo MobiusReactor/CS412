@@ -120,7 +120,7 @@ public class AdvancedSearch {
 			r.setScene(doc.get("scene"));
 			r.setSpeaker(doc.get("speaker"));
 			
-			System.out.println(doc.get("stagedir"));
+//			System.out.println(doc.get("scene"));
 
 			System.out.println((i + 1) + ". " + r.toString());
 

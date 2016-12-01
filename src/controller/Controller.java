@@ -173,7 +173,7 @@ public class Controller implements ActionListener, MouseListener {
 			String repfrom = searchTerms;
 			String repto = "<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>";
 
-			Pattern p = Pattern.compile(repfrom, Pattern.LITERAL);
+			Pattern p = Pattern.compile(repfrom, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(outtext);
 
 			
@@ -189,6 +189,7 @@ public class Controller implements ActionListener, MouseListener {
 			System.out.println("Matches for this document: " + counter);
 
 			// Update gui with the matches for the document stored in counter
+			gui.setTotalDocMatches(counter);
 				
 		} else {
 			
