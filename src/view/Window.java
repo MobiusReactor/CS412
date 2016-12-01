@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import model.Result;
@@ -59,7 +61,6 @@ public class Window {
 
 		searchPanel = new JTabbedPane();
 		searchPanel.setBounds(35, 10, 200, 190);
-
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -122,6 +123,13 @@ public class Window {
 		documentScrollPane.setBounds(270, 10, 740, 720);
 
 		window.add(documentScrollPane);
+		
+		searchPanel.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				setSearchType();
+			}
+		});
 
 		window.setVisible(true);
 		window.setResizable(false);
