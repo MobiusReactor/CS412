@@ -198,7 +198,7 @@ public class Controller implements ActionListener, MouseListener {
 				String repfrom = "\\b" + token + "\\b";
 				String repto = "<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>";
 
-				Pattern p = Pattern.compile(repfrom);
+				Pattern p = Pattern.compile(repfrom, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(outtext);
 
 				
