@@ -61,6 +61,8 @@ public class SimpleSearch {
 			if (path != null) {
 				r.setPath(path);
 			}
+			
+			r.setTitle(doc.get("title"));
 
 			result.add(r);
 		}

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,29 +48,30 @@ public class Controller implements ActionListener, MouseListener {
 		List<Result> results = new ArrayList<Result>();
 
 		switch (e.getActionCommand()) {
-			case "Search":
-				try {
+		case "Search":
+			try {
 
-					if (gui.getSearchType().equals("Simple")) {
-						results = model.search(gui.getSimpleSearch());
-					} else {
-						results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(), gui.getSearchType(), gui.getAdvancedSearchSpeaker());
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				if (gui.getSearchType().equals("Simple")) {
+					results = model.search(gui.getSimpleSearch());
+				} else {
+					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
+							gui.getSearchType(), gui.getAdvancedSearchSpeaker());
 				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 
-				if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
-					model.updateHistory(gui.getSimpleSearch());
-				}
+			if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
+				model.updateHistory(gui.getSimpleSearch());
+			}
 
-				gui.updateResults(results);
+			gui.updateResults(results);
 
-				break;
+			break;
 
-			case "comboBoxChanged":
-				gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
-				break;
+		case "comboBoxChanged":
+			gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
+			break;
 		}
 	}
 
@@ -76,7 +80,13 @@ public class Controller implements ActionListener, MouseListener {
 		// Fix for linux
 		String path = gui.getSelectedResult().replace("\\", File.separator);
 
-		String searchTerms = gui.getSimpleSearch();
+		int selected = gui.getSelectedSearch();
+		
+		String searchTerms = gui.getAdvancedSearchTerm();
+		
+		if(selected == 0){
+			searchTerms = gui.getSimpleSearch();
+		}
 
 		File input = new File(path);
 
@@ -111,50 +121,102 @@ public class Controller implements ActionListener, MouseListener {
 	public String formatBody(Document doc, String searchTerms) {
 		String body = null;
 		Element play = doc.select("play").first();
-		body = "<h1>" + play.select("title").first().text() + "</h1><br>";
+		body = " <h1> " + play.select("title").first().text() + " </h1><br> ";
 
 		for (Element act : play.select("act")) {
-			body = body + "<h2>" + act.select("title").first().text() + "</h2><br>";
+			body = body + " <h2> " + act.select("title").first().text() + " </h2><br> ";
 
 			for (Element scene : act.select("scene")) {
-				body = body + "<h3>" + scene.select("title").first().text() + "</h3><br>";
+				body = body + " <h3> " + scene.select("title").first().text() + " </h3><br> ";
 
 				for (Element speech : scene.children()) {
 
 					if (speech.tagName().equals("speech")) {
 						for (Element line : speech.children()) {
 							if (line.tagName().equals("speaker")) {
-								body = body + "<b>" + line.text() + "</b><br>";
+								body = body + " <b> " + line.text() + " </b><br> ";
 
 							} else if (line.tagName().equals("stagedir")) {
-								body = body + "<b><i>" + line.text() + "</i></b><br>";
+								body = body + " <b><i> " + line.text() + " </i></b><br> ";
 
 							} else {
 								if (line.children().size() > 0) {
 									for (Element e : line.children()) {
 										if (e.tagName().equals("stagedir")) {
-											body = body + "<b><i>" + e.text() + "</i></b><br>";
-											body = body + sp + line.text().substring(e.text().length()) + "<br>";
+											body = body + " <b><i> " + e.text() + " </i></b><br> ";
+											body = body + sp + line.text().substring(e.text().length()) + " <br> ";
 										}
 									}
 								} else {
-									body = body + sp + line.text() + "<br>";
+									body = body + sp + line.text() + " <br> ";
 								}
 							}
 						}
 					} else if (speech.tagName().equals("stagedir")) {
-						body = body + "<b><i>" + speech.text() + "</i></b><br>";
+						body = body + " <b><i> " + speech.text() + " </i></b><br> ";
 					}
 
-					body = body + "<br>";
+					body = body + " <br> ";
 				}
 			}
 		}
+		
+		int counter = 0;
 
-		StringTokenizer t = new StringTokenizer(searchTerms);
-		while (t.hasMoreTokens()) {
-			String token = t.nextToken();
-			body = body.replaceAll("(?i)" + token, "<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>");
+		if (searchTerms.charAt(0) == '"' && searchTerms.charAt(searchTerms.length() - 1) == '"') {
+			
+			searchTerms = searchTerms.substring(1, searchTerms.length()-1);
+			
+			String outtext = body;
+			String repfrom = searchTerms;
+			String repto = "<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>";
+
+			Pattern p = Pattern.compile(repfrom, Pattern.LITERAL);
+			Matcher m = p.matcher(outtext);
+
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+			    counter++;
+			    m.appendReplacement(sb, repto);
+			}
+			m.appendTail(sb);
+
+			body = sb.toString();
+
+			//Update gui with counter
+			
+//			body = body.replaceAll(searchTerms,
+//					"<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>");
+		} else {
+			
+			StringTokenizer t = new StringTokenizer(searchTerms);
+			while (t.hasMoreTokens()) {
+				String token = t.nextToken();
+				
+				String outtext = body;
+				String repfrom = "\\b" + token + "\\b";
+				String repto = "<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>";
+
+				Pattern p = Pattern.compile(repfrom);
+				Matcher m = p.matcher(outtext);
+
+				
+				StringBuffer sb = new StringBuffer();
+				while (m.find()) {
+				    counter++;
+				    m.appendReplacement(sb, repto);
+				}
+				m.appendTail(sb);
+
+				body = sb.toString();
+
+				//Update gui with counter
+				
+				
+//				body = body.replaceAll("\\b" + token + "\\b",
+//						"<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>");
+			}
 		}
 
 		return body;

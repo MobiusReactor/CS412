@@ -60,7 +60,7 @@ public class Result {
 			case "All":
 			default:
 				return "<html>"
-						+ path + "<br>"
+						+ title + "<br>"
 						+ "-"
 						+ "</html>";
 		}

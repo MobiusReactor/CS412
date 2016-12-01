@@ -87,7 +87,6 @@ public class AdvancedSearch {
 		System.out.println("SearchQ : " + searchQuery);
 
 		Query query = parser.parse(searchQuery);
-		// searcher.search(query, 100);
 
 		System.out.println("Searching for: " + query.toString(field));
 
@@ -111,6 +110,7 @@ public class AdvancedSearch {
 			r.setResultType(type);
 
 			Document doc = searcher.doc(hits[i].doc);
+			
 
 			r.setPath(doc.get("path"));
 			r.setTitle(doc.get("title"));
@@ -118,9 +118,9 @@ public class AdvancedSearch {
 			r.setScene(doc.get("scene"));
 			r.setSpeaker(doc.get("speaker"));
 			
-			System.out.println(doc.get("stagedir"));
+			//System.out.println(doc.get("stagedir"));
 
-			System.out.println((i + 1) + ". " + r.toString());
+			//System.out.println((i + 1) + ". " + r.toString());
 
 			resultList.add(r);
 		}

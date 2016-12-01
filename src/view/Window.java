@@ -133,13 +133,18 @@ public class Window {
 	public String getSimpleSearch() {
 		return searchField.getText();
 	}
+	
+	public int getSelectedSearch(){
+		return searchPanel.getSelectedIndex();
+	}
+	
 
 	public void setHistory(ArrayList<String> hist) {
 		if(hist.size() < 10){
 			history = new String[hist.size()];
 		}
 		Collections.reverse(hist);
-		for (int i = 0; i < hist.size() && i < 11; i++) {
+		for (int i = 0; i < hist.size() && i < 10; i++) {
 			history[i] = hist.get(i);
 		}
 	}
