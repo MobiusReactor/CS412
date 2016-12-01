@@ -139,7 +139,7 @@ public class Window {
 			history = new String[hist.size()];
 		}
 		Collections.reverse(hist);
-		for (int i = 0; i < hist.size() && i < 11; i++) {
+		for (int i = 0; i < hist.size() && i < 10; i++) {
 			history[i] = hist.get(i);
 		}
 	}
