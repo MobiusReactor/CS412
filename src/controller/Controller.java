@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,53 +47,58 @@ public class Controller implements ActionListener, MouseListener {
 		List<Result> results = new ArrayList<Result>();
 
 		switch (e.getActionCommand()) {
-		case "Search":
-			long start = System.nanoTime();
-			try {
+			case "Search":
+				long start = System.nanoTime();
+				try {
 
-				if (gui.getSearchType().equals("Simple")) {
-					results = model.search(gui.getSimpleSearch(), gui.useStem());
-				} else {
-					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
-							gui.getSearchType(), gui.getAdvancedSearchSpeaker());
+					if (gui.getSearchType().equals("Simple")) {
+						results = model.search(gui.getSimpleSearch(), gui.useStem());
+					} else {
+						results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
+								gui.getSearchType(), gui.getAdvancedSearchSpeaker());
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
 
-			if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
-				model.updateHistory(gui.getSimpleSearch());
-			}
+				if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
+					model.updateHistory(gui.getSimpleSearch());
+				}
 
-			long time = System.nanoTime()-start;
-			gui.updateResults(results, time);
+				long time = System.nanoTime() - start;
+				gui.updateResults(results, time);
 
-			break;
+				break;
 
-		case "comboBoxChanged":
-			gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
-			break;
+			case "comboBoxChanged":
+				gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
+				break;
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		Result r = gui.getSelectedResult();
+
 		// Fix for linux
-		String path = gui.getSelectedResult().replace("\\", File.separator);
+		String path = r.getPath().replace("\\", File.separator);
 
 		int selected = gui.getSelectedSearch();
-		
+
 		String searchTerms = gui.getAdvancedSearchTerm();
-		
-		if(selected == 0){
+
+		if (selected == 0) {
 			searchTerms = gui.getSimpleSearch();
 		}
+
+		String scene = r.getScene();
 
 		File input = new File(path);
 
 		try {
 			Document doc = Jsoup.parse(input, "UTF-8", "");
 			gui.updateMainPane(formatBody(doc, searchTerms));
+			gui.scrollToScene(scene);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -162,13 +166,13 @@ public class Controller implements ActionListener, MouseListener {
 				}
 			}
 		}
-		
+
 		int counter = 0;
 
 		if (searchTerms.charAt(0) == '"' && searchTerms.charAt(searchTerms.length() - 1) == '"') {
-			
-			searchTerms = searchTerms.substring(1, searchTerms.length()-1);
-			
+
+			searchTerms = searchTerms.substring(1, searchTerms.length() - 1);
+
 			String outtext = body;
 			String repfrom = searchTerms;
 			String repto = "<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>";
@@ -176,27 +180,27 @@ public class Controller implements ActionListener, MouseListener {
 			Pattern p = Pattern.compile(repfrom, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(outtext);
 
-			
+
 			StringBuffer sb = new StringBuffer();
 			while (m.find()) {
-			    counter++;
-			    m.appendReplacement(sb, repto);
+				counter++;
+				m.appendReplacement(sb, repto);
 			}
 			m.appendTail(sb);
 
 			body = sb.toString();
-			
+
 			System.out.println("Matches for this document: " + counter);
 
 			// Update gui with the matches for the document stored in counter
 			gui.setTotalDocMatches(counter);
-				
+
 		} else {
-			
+
 			StringTokenizer t = new StringTokenizer(searchTerms);
 			while (t.hasMoreTokens()) {
 				String token = t.nextToken();
-				
+
 				String outtext = body;
 				String repfrom = "\\b" + token + "\\b";
 				String repto = "<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>";
@@ -204,11 +208,11 @@ public class Controller implements ActionListener, MouseListener {
 				Pattern p = Pattern.compile(repfrom, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(outtext);
 
-				
+
 				StringBuffer sb = new StringBuffer();
 				while (m.find()) {
-				    counter++;
-				    m.appendReplacement(sb, repto);
+					counter++;
+					m.appendReplacement(sb, repto);
 				}
 				m.appendTail(sb);
 
@@ -216,8 +220,8 @@ public class Controller implements ActionListener, MouseListener {
 
 				gui.setTotalDocMatches(counter);
 
-				
-				
+
+
 			}
 		}
 

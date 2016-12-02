@@ -1,11 +1,13 @@
 package view;
 
+import java.awt.Container;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,11 +21,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import model.Result;
@@ -176,8 +180,8 @@ public class Window {
 		window.repaint();
 	}
 
-	public String getSelectedResult() {
-		return searchResults.getSelectedValue().getPath();
+	public Result getSelectedResult() {
+		return searchResults.getSelectedValue();
 	}
 
 	public void updateMainPane(String text) {
@@ -243,5 +247,45 @@ public class Window {
 	public void setTotalDocMatches(int counter) {
 		totalDocMatches.setText("Total Document Matches: " + counter);
 		totalDocMatches.setVisible(true);
+	}
+
+	public void scrollToScene(String scene) {
+		if (scene != null) {
+			try {
+				String target = scene.toUpperCase();
+				String source = document.getDocument().getText(0, document.getDocument().getLength()).toUpperCase();
+
+				int position = source.indexOf(target);
+
+				document.setCaretPosition(position);
+
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			document.setCaretPosition(0);
+		}
+
+		centerLineInScrollPane(document);
+	}
+
+	public static void centerLineInScrollPane(JTextComponent component) {
+		Container container = SwingUtilities.getAncestorOfClass(JViewport.class, component);
+
+		if (container == null)
+			return;
+
+		try {
+			Rectangle r = component.modelToView(component.getCaretPosition());
+			JViewport viewport = (JViewport) container;
+			int extentHeight = viewport.getExtentSize().height;
+			int viewHeight = viewport.getViewSize().height;
+
+			int y = Math.max(0, r.y - ((extentHeight - r.height) / 2));
+			y = Math.min(y, viewHeight - extentHeight);
+
+			viewport.setViewPosition(new Point(0, y));
+		} catch (BadLocationException ble) {
+		}
 	}
 }

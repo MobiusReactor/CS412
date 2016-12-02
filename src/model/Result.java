@@ -14,6 +14,10 @@ public class Result {
 		return path;
 	}
 
+	public String getScene() {
+		return scene;
+	}
+
 	public void setPath(String path) {
 		this.path = path;
 	}
