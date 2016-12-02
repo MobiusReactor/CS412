@@ -11,12 +11,12 @@ package week4;
  * permissions and 015 * limitations under the License. 016
  */
 import java.io.BufferedReader;
+
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
+
 import java.io.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
@@ -26,7 +26,9 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.Document;
@@ -90,7 +92,7 @@ public class IndexFilesNew {
 			System.out.println("Indexing to directory '" + indexPath + "'...");
 
 			Directory dir = FSDirectory.open(Paths.get(indexPath));
-			Analyzer analyzer = new StandardAnalyzer();
+			Analyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 
 			if (create) {

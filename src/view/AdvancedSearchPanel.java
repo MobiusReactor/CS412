@@ -2,11 +2,14 @@ package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class AdvancedSearchPanel extends JPanel implements ActionListener {
 	private JComboBox<String> typeBox;
@@ -22,7 +25,9 @@ public class AdvancedSearchPanel extends JPanel implements ActionListener {
 		add(searchLabel);
 
 		searchBox = new JTextField(15);
+		searchBox.setEditable(true);
 		add(searchBox);
+		AutoCompleteDecorator.decorate(searchBox, gui.getAutoComplete(), false);
 
 		JLabel playLabel = new JLabel("Play");
 		add(playLabel);

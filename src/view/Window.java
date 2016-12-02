@@ -39,6 +39,7 @@ public class Window {
 	private JTextComponent searchField;
 	private ActionListener listener;
 	private String[] history = new String[10];
+	private ArrayList<String> fullHistory = new ArrayList<String>();
 	private ArrayList<String> autoComplete = new ArrayList<String>();
 	private JComboBox<String> historyChoice;
 	private JList<Result> searchResults;
@@ -159,6 +160,7 @@ public class Window {
 	}
 
 	public void setHistory(ArrayList<String> hist) {
+		fullHistory = hist;
 		if (hist.size() < 10) {
 			history = new String[hist.size()];
 		}
@@ -222,8 +224,15 @@ public class Window {
 	}
 
 	private void setAutoComplete() {
+		for(String item: fullHistory){
+			autoComplete.add(item);
+		}
 		autoComplete.add("Hamlet");
 		autoComplete.add("Othello");
+		autoComplete.add("\"If music be the food of love play on\"");
+		autoComplete.add("\"Romeo, Romeo! wherefore art thou Romeo?\"");
+		autoComplete.add("plague");
+		autoComplete.add("\"beast with two backs\"");
 	}
 
 	public void updateTotalResults(long time) {
@@ -292,5 +301,9 @@ public class Window {
 			viewport.setViewPosition(new Point(0, y));
 		} catch (BadLocationException ble) {
 		}
+	}
+	 
+	public ArrayList<String> getAutoComplete(){
+		return autoComplete;
 	}
 }
