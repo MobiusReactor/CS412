@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
@@ -21,10 +22,8 @@ import org.apache.lucene.store.FSDirectory;
 
 public class AdvancedSearch {
 
-
-	public List<Result> search(String userQuery, String play, String searchField, String speakerField) throws Exception {
-
-
+	public List<Result> search(String userQuery, String play, String searchField, String speakerField)
+			throws Exception {
 
 		String index = "index";
 		String field = "contents";
@@ -52,31 +51,38 @@ public class AdvancedSearch {
 			speaker = speakerField;
 		}
 
-
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
 		IndexSearcher searcher = new IndexSearcher(reader);
 		Analyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
 
 		QueryParser parser = null;
 
-//        if(field.equals("All")){
-////			This Parser of all fields are selected
-//        parser = new MultiFieldQueryParser(
-//                new String[]{"title", "scene", "speaker", "stagedir","contents"},
-//                analyzer);
-//        } else{
-
-		// This parser if one field is selected
 		parser = new QueryParser(field, analyzer);
-//        }
-        
-        String searchQuery;
 
-//        if(field.equals("All")){
-//        	searchQuery = userQuery.trim();
-//        }else{
-        	searchQuery = "(" + field + ":" + userQuery.trim() + ")";
-//        }
+		String searchQuery = "(";
+
+		userQuery = userQuery.trim();
+
+		if (userQuery.indexOf('"')>=0) {
+			searchQuery += field + ":" + userQuery;
+		} else {
+
+			StringTokenizer t = new StringTokenizer(userQuery);
+
+			searchQuery += "(";
+
+			while (t.hasMoreTokens()) {
+				String token = t.nextToken();
+
+				if (token.equals("AND") || token.equals("OR") || token.equals("NOT")) {
+					searchQuery += token + " ";
+				} else {
+					searchQuery += field + ":" + token.trim() + " ";
+				}
+			}
+			searchQuery += ")";
+		}
+		searchQuery += ")";
 
 		if (playTerm != null) {
 			searchQuery = searchQuery + " AND title:" + playTerm + "";
@@ -92,7 +98,6 @@ public class AdvancedSearch {
 		// searcher.search(query, 100);
 
 		System.out.println("Searching for: " + query.toString(field));
-
 
 		return doSearch(searcher, query, searchField);
 	}
@@ -119,7 +124,7 @@ public class AdvancedSearch {
 			r.setAct(doc.get("act"));
 			r.setScene(doc.get("scene"));
 			r.setSpeaker(doc.get("speaker"));
-			
+
 			System.out.println(doc.get("stagedir"));
 
 			System.out.println((i + 1) + ". " + r.toString());

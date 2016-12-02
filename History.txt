@@ -98,3 +98,9 @@ topped
 "not to be"
 macbeth
 macbeth
+"to be or not to be"
+"To be or not to be"
+"to be or not to be" OR Othello
+"to be or not to be" Othello
+"to be or not to be" Othello
+"to be or not to be" "heavy" "some"

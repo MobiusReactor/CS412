@@ -47,32 +47,39 @@ public class Controller implements ActionListener, MouseListener {
 		List<Result> results = new ArrayList<Result>();
 
 		switch (e.getActionCommand()) {
-			case "Search":
-				long start = System.nanoTime();
-				try {
+		case "Search":
+			long start = System.nanoTime();
 
-					if (gui.getSearchType().equals("Simple")) {
-						results = model.search(gui.getSimpleSearch(), gui.useStem());
-					} else {
-						results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
-								gui.getSearchType(), gui.getAdvancedSearchSpeaker());
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+			boolean invalid = false;
+
+			try {
+
+				if (gui.getSearchType().equals("Simple")) {
+					results = model.search(gui.getSimpleSearch(), gui.useStem());
+				} else {
+					results = model.search(gui.getAdvancedSearchTerm(), gui.getAdvancedSearchPlay(),
+							gui.getSearchType(), gui.getAdvancedSearchSpeaker());
 				}
+			} catch (Exception ex) {
+				invalid = true;
+			}
 
-				if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
-					model.updateHistory(gui.getSimpleSearch());
-				}
+			if (results.size() > 0 && gui.getSearchType().equals("Simple")) {
+				model.updateHistory(gui.getSimpleSearch());
+			}
 
-				long time = System.nanoTime() - start;
+			long time = System.nanoTime() - start;
+			if (invalid) {
+				gui.showInvalidQuery();
+			} else {
 				gui.updateResults(results, time);
+			}
 
-				break;
+			break;
 
-			case "comboBoxChanged":
-				gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
-				break;
+		case "comboBoxChanged":
+			gui.getSimpleSearchField().setText(gui.getHistoryChoice().getSelectedItem().toString());
+			break;
 		}
 	}
 
@@ -169,17 +176,62 @@ public class Controller implements ActionListener, MouseListener {
 
 		int counter = 0;
 
-		if (searchTerms.charAt(0) == '"' && searchTerms.charAt(searchTerms.length() - 1) == '"') {
+		if (searchTerms.indexOf('"')>=0) {
+			
+			ArrayList<String> phrases = new ArrayList<String>();
+			
+			
+			while(searchTerms.indexOf('"')>=0){
+				int startIndex = searchTerms.indexOf('"');
+				int endIndex = searchTerms.indexOf('"',startIndex + 1);
+				String phrase = searchTerms.substring(startIndex+1, endIndex);
+				phrases.add(phrase);
+				
+				searchTerms = searchTerms.substring(0, startIndex) + searchTerms.substring(endIndex+1,searchTerms.length());
+			
+				searchTerms.trim();
 
-			searchTerms = searchTerms.substring(1, searchTerms.length() - 1);
+			}
+
+//			searchTerms = searchTerms.substring(1, searchTerms.length() - 1);
+			
+			StringTokenizer t = new StringTokenizer(searchTerms);
+			while (t.hasMoreTokens()) {
+				String token = t.nextToken();
+
+				if(token.equals("OR")|| token.equals("AND") || token.equals("NOT")){
+					continue;
+				}
+
+				
+				String outtext = body;
+				
+				String repfrom = "\\b" + token + "\\b";
+				String repto = "<span style=\"background-color:yellow\">" + token.toUpperCase() + "</span>";
+
+				Pattern p = Pattern.compile(repfrom, Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(outtext);
+
+				StringBuffer sb = new StringBuffer();
+				while (m.find()) {
+					counter++;
+					m.appendReplacement(sb, repto);
+				}
+				m.appendTail(sb);
+
+				body = sb.toString();
+			}
+			
+			for(String phrase : phrases){
+				
+			
 
 			String outtext = body;
-			String repfrom = searchTerms;
-			String repto = "<span style=\"background-color:yellow\">" + searchTerms.toUpperCase() + "</span>";
+			String repfrom = phrase;
+			String repto = "<span style=\"background-color:yellow\">" + phrase.toUpperCase() + "</span>";
 
 			Pattern p = Pattern.compile(repfrom, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(outtext);
-
 
 			StringBuffer sb = new StringBuffer();
 			while (m.find()) {
@@ -189,8 +241,8 @@ public class Controller implements ActionListener, MouseListener {
 			m.appendTail(sb);
 
 			body = sb.toString();
-
-			System.out.println("Matches for this document: " + counter);
+			
+			}
 
 			// Update gui with the matches for the document stored in counter
 			gui.setTotalDocMatches(counter);
@@ -200,6 +252,10 @@ public class Controller implements ActionListener, MouseListener {
 			StringTokenizer t = new StringTokenizer(searchTerms);
 			while (t.hasMoreTokens()) {
 				String token = t.nextToken();
+				
+				if(token.equals("OR")|| token.equals("AND") || token.equals("NOT")){
+					continue;
+				}
 
 				String outtext = body;
 				String repfrom = "\\b" + token + "\\b";
@@ -207,7 +263,6 @@ public class Controller implements ActionListener, MouseListener {
 
 				Pattern p = Pattern.compile(repfrom, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(outtext);
-
 
 				StringBuffer sb = new StringBuffer();
 				while (m.find()) {
@@ -219,8 +274,6 @@ public class Controller implements ActionListener, MouseListener {
 				body = sb.toString();
 
 				gui.setTotalDocMatches(counter);
-
-
 
 			}
 		}

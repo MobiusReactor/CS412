@@ -179,6 +179,11 @@ public class Window {
 		updateTotalResults(time);
 		window.repaint();
 	}
+	
+	public void showInvalidQuery(){
+		totalResults.setText("Invalid Search Term!");
+		totalResults.setVisible(true);
+	}
 
 	public Result getSelectedResult() {
 		return searchResults.getSelectedValue();
