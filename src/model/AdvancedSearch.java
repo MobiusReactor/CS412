@@ -100,7 +100,7 @@ public class AdvancedSearch {
 	public List<Result> doSearch(IndexSearcher searcher, Query query, String type) throws IOException {
 		List<Result> resultList = new ArrayList<Result>();
 		// Collect enough docs to show 5 pages
-		TopDocs results = searcher.search(query, 100);
+		TopDocs results = searcher.search(query, Integer.MAX_VALUE);
 		ScoreDoc[] hits = results.scoreDocs;
 
 		int numTotalHits = results.totalHits;
